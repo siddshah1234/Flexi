@@ -44,7 +44,7 @@ const RootLayout = () => {
         <Stack.Screen name="(auth)" options={{ headerShown: false}} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
         <Stack.Screen name="(workouts)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: ""}} />
-        <Stack.Screen name="(resourcesTab)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "Yoga Resources", headerTitleStyle: {color: 'white', fontSize: 25}}} />
+        <Stack.Screen name="(resourcesTab)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "Resources", headerTitleStyle: {color: 'white', fontSize: 25}}} />
         <Stack.Screen name="(running2)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: ""}} />
       </Stack>
     </GlobalProvider>

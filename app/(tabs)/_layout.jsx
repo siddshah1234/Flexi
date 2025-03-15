@@ -71,6 +71,26 @@ const TabsLayout = () => {
                     }}
                 />
                 <Tabs.Screen
+                    name="AI"
+                    options={{
+                        title: "AI",
+                        headerShown: false,
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabIcon
+                                icon={icons.ai}
+                                color={color}
+                                name="AI"
+                                focused={focused}
+                            />
+                        ),
+                        tabBarLabel: ({ focused, name, color }) => (
+                            <Text className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`} style={{ color: color }}>
+                                AI
+                            </Text>
+                        ),
+                    }}
+                />
+                <Tabs.Screen
                     name="logout"
                     options={{
                         title: "Logout",

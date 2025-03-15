@@ -13,6 +13,7 @@ import eye from "../assets/icons/eye.png";
 import play from "../assets/icons/play.png";
 import edit from "../assets/icons/edit.png";
 import settings from "../assets/icons/settings.png";
+import ai from "../assets/icons/ai.png";
 
 export default {
   play,
@@ -30,4 +31,5 @@ export default {
   eye,
   edit,
   settings,
+  ai,
 };

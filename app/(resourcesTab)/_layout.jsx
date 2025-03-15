@@ -9,7 +9,7 @@ const resourcesTabLayout = () => {
         <Stack.Screen
           name="HomeResources"
           options={{
-            headerShown: true,
+            headerShown: false,
           }}
         />
         <Stack.Screen

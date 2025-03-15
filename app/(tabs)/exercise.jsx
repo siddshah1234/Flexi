@@ -8,11 +8,11 @@ import { useNavigation } from '@react-navigation/native';
 import { Redirect, router, link } from "expo-router";
 
 const exercise = () => {
-  
+
   const [refreshing, setRefreshing] = useState(false);
   const [user, setUser] = useState(null);
   const [xp, setXp] = useState(0);
-  const navigation = useNavigation(); // Add navigation hook
+  const navigation = useNavigation();
 
   const calculateFillPercentage = (xp) => {
     const maxXp = 100; // Example max XP value
@@ -63,41 +63,50 @@ const exercise = () => {
     }, 2000);
   };
 
-  const activities = [
-    {
-      id: '1',
-      title: 'Guided Walking',
-      description: 'Explore guided walking paths.',
-      onPress: () => router.push('/running/running'), // Navigate to Running Tracker
-      //image: require('../../assets/walking.png'),
-    },
-    {
-      id: '2',
-      title: 'Guided Yoga',
-      description: 'Relax with guided yoga sessions.',
-      onPress: () => router.push('/workouts/YogaHomeScreen'), // Navigate to Yoga Home Screen
-      //image: require('../../assets/yoga.png'),
-    },
-    {
-      id: '3',
-      title: 'Stretch Breaks',
-      description: 'Take quick stretch breaks to refresh your body.',
 
-      //image: require('../../assets/stretching.png'),
-    },
-  ];
+  // const activities = [
+  //   {
+  //     id: '1',
+  //     title: 'Guided Walking',
+  //     description: 'Explore guided walking paths.',
+  //     onPress: () => router.push('/running/running'), // Navigate to Running Tracker
+  //     //image: require('../../assets/walking.png'),
+  //   },
+  //   {
+  //     id: '2',
+  //     title: 'Guided Yoga',
+  //     description: 'Relax with guided yoga sessions.',
+  //     onPress: () => router.push('/workouts/YogaHomeScreen'), // Navigate to Yoga Home Screen
+  //     //image: require('../../assets/yoga.png'),
+  //   },
+  //   {
+  //     id: '3',
+  //     title: 'Stretch Breaks',
+  //     description: 'Take quick stretch breaks to refresh your body.',
+
+  //     //image: require('../../assets/stretching.png'),
+  //   },
+  // ];
 
   const challenges = [
-    { id: '1', title: 'Walk 5,000 Steps', reward: '🏆 50 XP' },
+    { id: '1', title: 'Walk 5,000 Steps', reward: '🏆 50 XP ✅ ' },
     { id: '2', title: 'Complete a Yoga Session', reward: '🎖️ 10 XP' },
     { id: '3', title: 'Finish both Beginner and Advanced Yoga Session ', reward: '✨ 75 XP' },
   ];
 
   const leaderboard = [
-    { id: '1', name: 'Rishi', score: '1,350 XP' },
-    { id: '2', name: 'siddhant', score: '1,120 XP' },
-    { id: '3', name: 'Dylan', score: '20 XP' },
+    { id: '2', name: 'Siddhant', score: 1120 },
+    { id: '3', name: 'Dylan', score: 20 },
   ];
+
+  // Add current user to leaderboard
+  leaderboard.push({ id: '0', name: user, score: xp });
+
+  // Sort leaderboard by score in descending order
+  leaderboard.sort((a, b) => b.score - a.score);
+
+  // Get top 5 players
+  const topFiveLeaderboard = leaderboard.slice(0, 5);
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -166,7 +175,7 @@ const exercise = () => {
                     <TouchableOpacity
                       activeOpacity={0.7}
                       onPress={() => router.push('running')
-                        }
+                      }
                       className="w-full h-60 rounded-xl relative flex justify-center items-center"
                     >
                       <Image
@@ -216,8 +225,8 @@ const exercise = () => {
             <View className="flex flex-wrap flex-row justify-between">
             </View>
 
-            <View className="w-full mt-10">
-              <Text className="text-xl text-white font-bold mb-5">Challenges</Text>
+            {/* <View className="w-full mt-10">
+              <Text className="text-xl text-white font-bold mb-5">Daily Challenges</Text>
               {challenges.map((challenge) => (
                 <View
                   key={challenge.id}
@@ -227,7 +236,38 @@ const exercise = () => {
                   <Text className="text-sm text-gray-400">Reward: {challenge.reward}</Text>
                 </View>
               ))}
+            </View> */}
+
+            <View className="w-full mt-10">
+              <Text className="text-xl text-white font-bold mb-5">Daily Challenges</Text>
+              {challenges.map((challenge, index) => (
+                <View
+                  key={challenge.id}
+                  className="bg-gray-800 p-4 rounded-lg mb-4 relative" // Add relative positioning
+                >
+                  {index === 0 && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        left: 20,
+                        right: 205,
+                        top: '60%', // Adjust the position as needed
+                        height: 4, // Thicker line
+                        backgroundColor: 'white', // Color of the line
+                        zIndex: 1, // Ensure it appears above the text
+                      }}
+                    />
+                  )}
+                  <Text
+                    className="text-lg font-bold text-white"
+                  >
+                    {challenge.title}
+                  </Text>
+                  <Text className="text-sm text-gray-400">Reward: {challenge.reward}</Text>
+                </View>
+              ))}
             </View>
+
 
             <View className="w-full mt-10">
               <Text className="text-xl text-white font-bold mb-5">Leaderboard</Text>
@@ -237,15 +277,15 @@ const exercise = () => {
                   className="bg-gray-800 p-4 rounded-lg mb-4 flex-row justify-between"
                 >
                   <Text className="text-lg font-bold text-white">{player.name}</Text>
-                  <Text className="text-lg text-secondary-200">{player.score}</Text>
+                  <Text className="text-lg text-secondary-200">{player.score} XP</Text>
                 </View>
               ))}
             </View>
           </View>
         )}
-        refreshControl={< RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
-    </SafeAreaView >
+    </SafeAreaView>
   );
 };
 

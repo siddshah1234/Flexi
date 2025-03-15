@@ -8,27 +8,29 @@ const Resources = () => {
       id: '1',
       title: 'Yoga and Mindfulness',
       description: 'Explore yoga poses, mindfulness exercises, and meditation resources to relax and rejuvenate.',
-      image: 'https://www.everydayyoga.com/cdn/shop/articles/yoga_1024x1024.jpg?v=1703853908',
+      image: 'https://www.everydayyoga.com/cdn/shop/articles/yoga_1024x1024.jpg?v=1703853908', // Updated image
       navigateTo: 'YogaResources',
     },
     {
       id: '2',
       title: 'Outdoor Activities',
       description: 'Find nearby trails, biking paths, and outdoor adventures to stay active and explore nature.',
-      image: 'https://www.strong4life.com/-/media/Strong4Life/Pages/Activity/Articles/6-Fun-and-Easy-Outdoor-Activities-for-Kids/SLP17_MIX_4y_Family_riding_bikes_0444.jpg',
+      image: 'https://www.strong4life.com/-/media/Strong4Life/Pages/Activity/Articles/6-Fun-and-Easy-Outdoor-Activities-for-Kids/SLP17_MIX_4y_Family_riding_bikes_0444.jpg', // Updated image
       navigateTo: 'OutdoorResources',
     },
     {
       id: '3',
       title: 'Home and Online Fitness',
       description: 'Access workout programs, virtual classes, and fitness challenges for all levels at home.',
-      image: 'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2021/12/457969-MR-MARKET-CLONE-8-of-the-best-online-workout-programs-to-do-at-hom-1296x728-Header-cedd88-1024x574.jpg?w=1155&h=1528',
+      image:  'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2021/12/457969-MR-MARKET-CLONE-8-of-the-best-online-workout-programs-to-do-at-hom-1296x728-Header-cedd88-1024x574.jpg?w=1155&h=1528', // Updated image
       navigateTo: 'HomeResources',
     },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>Fitness Resources</Text>
+      <Text style={styles.subHeader}>Choose a category to explore</Text>
       <View style={styles.categories}>
         {categories.map((category) => (
           <TouchableOpacity
@@ -61,17 +63,23 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 28,
-    color: '#fff',
+    color: '#ffffff',
     fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  subHeader: {
+    fontSize: 16,
+    color: '#cccccc',
     textAlign: 'center',
     marginBottom: 20,
   },
   categories: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'space-around', // Space out the categories evenly
   },
   categoryBox: {
-    height: '30%',
+    height: 180, // Adjusted height to fit without scrolling
     borderRadius: 12,
     overflow: 'hidden',
     marginBottom: 20,
@@ -91,13 +99,13 @@ const styles = StyleSheet.create({
   },
   categoryTitle: {
     fontSize: 22,
-    color: '#fff',
+    color: '#ffffff',
     fontWeight: 'bold',
     textAlign: 'center',
   },
   categoryDescription: {
-    fontSize: 14,
-    color: '#ccc',
+    fontSize: 12,
+    color: '#cccccc',
     textAlign: 'center',
     marginTop: 5,
   },
