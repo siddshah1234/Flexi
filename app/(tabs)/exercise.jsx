@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Image, RefreshControl, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../../constants';
@@ -6,12 +6,13 @@ import Quote from '../../components/Quote';
 import { getAccount, getCurrentUser, updateUser } from '../../lib/appwrite';
 import { useNavigation } from '@react-navigation/native';
 import { Redirect, router, link } from "expo-router";
+import { useXp } from '../(tabs)/XpContext';
 
 const exercise = () => {
 
   const [refreshing, setRefreshing] = useState(false);
   const [user, setUser] = useState(null);
-  const [xp, setXp] = useState(0);
+  const { addXp, xp } = useXp()
   const navigation = useNavigation();
 
   const calculateFillPercentage = (xp) => {
@@ -24,12 +25,12 @@ const exercise = () => {
     return Math.floor(xp / maxXp) + 1;
   };
 
-  const addXp = (amount) => {
-    const userDocument = getCurrentUser();
-    setXp((prevXp) => prevXp + amount);
-    userDocument.xp += amount;
-    return userDocument.xp;
-  };
+  // const addXp = (amount) => {
+  //   const userDocument = getCurrentUser();
+  //   setXp((prevXp) => prevXp + amount);
+  //   userDocument.xp += amount;
+  //   return userDocument.xp;
+  // };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -38,7 +39,6 @@ const exercise = () => {
         const userDocument = await getCurrentUser();
 
         setUser(Account.name);
-        setXp(userDocument.xp);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -148,95 +148,128 @@ const exercise = () => {
             </View>
             <View className="w-full">
               <Text className="text-xl text-white font-bold mb-5 mt-8">Activities</Text>
-              <View className="flex flex-col items-center px-4 mb-14">
-                <View className="flex flex-col gap-3 items-start w-full"> {/* Ensure full width */}
-                  <View className="flex flex-col gap-3 w-full"> {/* Change flex-row to flex-col */}
-                    <View className="flex justify-center items-center flex-row w-full"> {/* Ensure full width */}
-                      <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
+              <View>
+                {/* Scrollable Cards */}
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={true} // Enable default scroll indicator
+                  contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }} // Add padding for spacing
+                >
+                  <View className="flex flex-row gap-6 items-center">
+                    {/* Party Games */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                      <View className="flex justify-center items-center flex-row w-full">
+                        <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
+                          <Image
+                            source={images.game}
+                            className="w-full h-full rounded-lg"
+                            resizeMode="cover"
+                          />
+                        </View>
+                        <View className="flex justify-center flex-1 ml-3 gap-y-1">
+                          <Text
+                            className="font-psemibold text-sm text-white"
+                            numberOfLines={1}>
+                            Party Games
+                          </Text>
+                          <Text
+                            className="text-xs text-gray-100 font-pregular"
+                            numberOfLines={1}>
+                            Get into action with party excerise games!
+                          </Text>
+                        </View>
+                      </View>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => router.push('triviahome')}
+                        className="w-full h-60 rounded-xl relative flex justify-center items-center"
+                      >
                         <Image
-                          source={images.profile}
-                          className="w-full h-full rounded-lg"
+                          source={images.party}
+                          className="w-full h-full rounded-xl mt-3"
                           resizeMode="cover"
                         />
+                      </TouchableOpacity>
+                    </View>
+                    {/* HIIT Activity */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                      <View className="flex justify-center items-center flex-row w-full">
+                        <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
+                          <Image
+                            source={images.profile}
+                            className="w-full h-full rounded-lg"
+                            resizeMode="cover"
+                          />
+                        </View>
+                        <View className="flex justify-center flex-1 ml-3 gap-y-1">
+                          <Text
+                            className="font-psemibold text-sm text-white"
+                            numberOfLines={1}>
+                            HIIT
+                          </Text>
+                          <Text
+                            className="text-xs text-gray-100 font-pregular"
+                            numberOfLines={1}>
+                            High, Intesive workouts to get your heart pumping!
+                          </Text>
+                        </View>
                       </View>
-                      <View className="flex justify-center flex-1 ml-3 gap-y-1">
-                        <Text
-                          className="font-psemibold text-sm text-white"
-                          numberOfLines={1}>
-                          Guided Running
-                        </Text>
-                        <Text
-                          className="text-xs text-gray-100 font-pregular"
-                          numberOfLines={1}>
-                          Become fit with an interactive running page.
-                        </Text>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => router.push('homehiit')}
+                        className="w-full h-60 rounded-xl relative flex justify-center items-center"
+                      >
+                        <Image
+                          source={images.thumbnail}
+                          className="w-full h-full rounded-xl mt-3"
+                          resizeMode="cover"
+                        />
+                      </TouchableOpacity>
+                    </View>
+
+                    {/* Yoga Stretches Activity */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                      <View className="flex justify-center items-center flex-row w-full">
+                        <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
+                          <Image
+                            source={images.pose}
+                            className="w-full h-full rounded-lg"
+                            resizeMode="cover"
+                          />
+                        </View>
+                        <View className="flex justify-center flex-1 ml-3 gap-y-1">
+                          <Text
+                            className="font-psemibold text-sm text-white"
+                            numberOfLines={1}>
+                            Yoga Stretches
+                          </Text>
+                          <Text
+                            className="text-xs text-gray-100 font-pregular"
+                            numberOfLines={1}>
+                            Relax with guided yoga sessions.
+                          </Text>
+                        </View>
                       </View>
-                    </View>
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      onPress={() => router.push('running')
-                      }
-                      className="w-full h-60 rounded-xl relative flex justify-center items-center"
-                    >
-                      <Image
-                        source={images.thumbnail}
-                        className="w-full h-full rounded-xl mt-3"
-                        resizeMode="cover"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <Text></Text>
-                  <View className="flex justify-center items-center flex-row w-full"> {/* Ensure full width */}
-                    <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
-                      <Image
-                        source={images.pose}
-                        className="w-full h-full rounded-lg"
-                        resizeMode="cover"
-                      />
-                    </View>
-                    <View className="flex justify-center flex-1 ml-3 gap-y-1">
-                      <Text
-                        className="font-psemibold text-sm text-white"
-                        numberOfLines={1}>
-                        Yoga Stretches
-                      </Text>
-                      <Text
-                        className="text-xs text-gray-100 font-pregular"
-                        numberOfLines={1}>
-                        Relax with guided yoga sessions.
-                      </Text>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => router.push('YogaHomeScreen')}
+                        className="w-full h-60 rounded-xl mt-3 relative flex justify-center items-center"
+                      >
+                        <Image
+                          source={images.empty}
+                          className="w-full h-full rounded-xl"
+                          resizeMode="cover"
+                        />
+                      </TouchableOpacity>
                     </View>
                   </View>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() => router.push('YogaHomeScreen')}
-                    className="w-full h-60 rounded-xl mt-3 relative flex justify-center items-center"
-                  >
-                    <Image
-                      source={images.empty}
-                      className="w-full h-full rounded-xl"
-                      resizeMode="cover"
-                    />
-                  </TouchableOpacity>
-                </View>
+                </ScrollView>
               </View>
             </View>
 
             <View className="flex flex-wrap flex-row justify-between">
             </View>
 
-            {/* <View className="w-full mt-10">
-              <Text className="text-xl text-white font-bold mb-5">Daily Challenges</Text>
-              {challenges.map((challenge) => (
-                <View
-                  key={challenge.id}
-                  className="bg-gray-800 p-4 rounded-lg mb-4"
-                >
-                  <Text className="text-lg font-bold text-white">{challenge.title}</Text>
-                  <Text className="text-sm text-gray-400">Reward: {challenge.reward}</Text>
-                </View>
-              ))}
-            </View> */}
 
             <View className="w-full mt-10">
               <Text className="text-xl text-white font-bold mb-5">Daily Challenges</Text>

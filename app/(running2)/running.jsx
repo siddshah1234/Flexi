@@ -20,8 +20,8 @@ const RunningHomeScreen = () => {
           >
             <Text style={styles.optionText}>Custom Circuit</Text>
             <Text style={styles.description}>
-                  Create and follow a custom circuit by filling out the necessary information. Maintain a moderate pace to maximize your XP gain.
-        </Text>
+              Create and follow a custom circuit by filling out the necessary information. Maintain a moderate pace to maximize your XP gain.
+            </Text>
           </ImageBackground>
         </TouchableOpacity>
         {/* Medium Circuit */}
@@ -37,8 +37,8 @@ const RunningHomeScreen = () => {
           >
             <Text style={styles.optionText}>Beginner Circuit</Text>
             <Text style={styles.description}>
-        This is the beginner circuit with a set range and time. Gain XP by ranking within those timings.
-        </Text>
+              This is the beginner circuit with a set range and time. Gain XP by ranking within those timings.
+            </Text>
           </ImageBackground>
         </TouchableOpacity>
         {/* Advanced Circuit */}
@@ -54,8 +54,8 @@ const RunningHomeScreen = () => {
           >
             <Text style={styles.optionText}>Advanced Circuit</Text>
             <Text style={styles.description}>
-            This is the Advanced Circuit, which has higher requirements and is much harder than the previous circuit. Have some water and be prepared!
-        </Text>
+              This is the Advanced Circuit, which has higher requirements and is much harder than the previous circuit. Have some water and be prepared!
+            </Text>
           </ImageBackground>
         </TouchableOpacity>
       </View>
@@ -100,56 +100,56 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 6,
   },
-    container: {
-      flex: 1,
-      backgroundColor: '#161622',
-      justifyContent: 'center',
-      paddingHorizontal: 20,
+  container: {
+    flex: 1,
+    backgroundColor: '#161622',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    width: '100%',
+    height: 200,
+    marginBottom: 20,
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 5, // For Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    contentContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    card: {
-      width: '100%',
-      height: 200,
-      marginBottom: 20,
-      borderRadius: 12,
-      overflow: 'hidden',
-      elevation: 5, // For Android shadow
-      shadowColor: '#000', // iOS shadow
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
-    },
-    imageBackground: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    cardText: {
-      fontSize: 24,
-      color: '#fff',
-      fontWeight: 'bold',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      padding: 10,
-      borderRadius: 6,
-    },
-    description: {
-      fontSize: 12,
-      color: '#FFFFFF',
-      marginTop: 10,
-      marginHorizontal: 20,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      textAlign: 'center',
-      lineHeight: 20, // Improved readability
-      padding: 10,
-      borderRadius: 6,
-    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardText: {
+    fontSize: 24,
+    color: '#fff',
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 10,
+    borderRadius: 6,
+  },
+  description: {
+    fontSize: 12,
+    color: '#FFFFFF',
+    marginTop: 10,
+    marginHorizontal: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    textAlign: 'center',
+    lineHeight: 20, // Improved readability
+    padding: 10,
+    borderRadius: 6,
+  },
 });
 
 export default RunningHomeScreen;

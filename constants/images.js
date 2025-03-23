@@ -6,5 +6,7 @@ import logo from "../assets/images/logo.png";
 import logoSmall from "../assets/images/logo-small.png";
 import empty from "../assets/images/empty.png";
 import pose from "../assets/images/pose.png";
+import party from "../assets/images/party.png";
+import game from "../assets/images/game.png";
 
-export default { profile, thumbnail, cards, path, logo, logoSmall, empty, pose };
+export default { profile, thumbnail, cards, path, logo, logoSmall, empty, pose, party, game };

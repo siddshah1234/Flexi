@@ -5,11 +5,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from '../constants'
 import CustomButton from "../components/CustomButton";
 import { useGlobalContext } from "../context/globalprovider";
+import { LogBox } from 'react-native';
+
+// Ignore specific warnings
+LogBox.ignoreLogs([
+  'Text strings must be rendered within a <Text> component',
+]);
 
 export default function App() {
   const { loading, isLogged } = useGlobalContext();
-  if (!loading && isLogged) return <Redirect href="/exercise"/>;
-  
+  if (!loading && isLogged) return <Redirect href="/exercise" />;
+
 
 
   return (
@@ -41,17 +47,6 @@ export default function App() {
             containerStyles="w-full mt-7"
           />
         </View>
-
-        
-
-
-
-       
-
-
-
-
-
       </ScrollView>
       <StatusBar backgroundColor="#161622" style='light' />
     </SafeAreaView>

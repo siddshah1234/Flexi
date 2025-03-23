@@ -50,13 +50,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
-    header: {
-      fontSize: 32,
-      color: '#fff',
-      fontWeight: 'bold',
-      textAlign: 'center',
-      marginBottom: 10,
-    },
+  header: {
+    fontSize: 32,
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
   contentContainer: {
     flex: 1,
     justifyContent: 'center',

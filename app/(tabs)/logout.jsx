@@ -14,14 +14,14 @@ const Logout = () => {
 
     router.replace("/signin");
   };
-  
+
   useEffect(() => {
     logout();
   }, []);
 
   return (
     <View>
-      
+
     </View>
   )
 }

@@ -22,7 +22,7 @@ const Resources = () => {
       id: '3',
       title: 'Home and Online Fitness',
       description: 'Access workout programs, virtual classes, and fitness challenges for all levels at home.',
-      image:  'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2021/12/457969-MR-MARKET-CLONE-8-of-the-best-online-workout-programs-to-do-at-hom-1296x728-Header-cedd88-1024x574.jpg?w=1155&h=1528', // Updated image
+      image: 'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2021/12/457969-MR-MARKET-CLONE-8-of-the-best-online-workout-programs-to-do-at-hom-1296x728-Header-cedd88-1024x574.jpg?w=1155&h=1528', // Updated image
       navigateTo: 'HomeResources',
     },
   ];

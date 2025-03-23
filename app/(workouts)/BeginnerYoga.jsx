@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, Image, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, Image, SafeAreaView, TouchableOpacity, Animated } from 'react-native';
+import { useXp } from '../(tabs)/XpContext';
 
 const BeginnerYoga = () => {
   const [currentPoseIndex, setCurrentPoseIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
+  const [showXpBar, setShowXpBar] = useState(false);
+  const xpBarWidth = useRef(new Animated.Value(0)).current; // Animated value for XP bar width
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Animated value for opacity
+  const { addXp, xp, calculateLevel } = useXp();
 
   const poses = [
     {
@@ -63,6 +68,11 @@ const BeginnerYoga = () => {
     },
   ];
 
+  const calculateFillPercentage = (xp) => {
+    const maxXp = 100; // Example max XP value
+    return ((xp % maxXp) / maxXp) * 100;
+  };
+
   const startTimer = () => {
     setIsTimerActive(true);
     setTimeRemaining(poses[currentPoseIndex].duration);
@@ -72,6 +82,46 @@ const BeginnerYoga = () => {
         if (prev <= 1) {
           clearInterval(interval);
           setIsTimerActive(false);
+
+          // Add XP when the timer hits 0
+          (async () => {
+            try {
+              const addedXp = 20; // XP to add
+              const updatedXp = await addXp(addedXp); // Add XP to the user
+              console.log(`XP added successfully! New XP: ${updatedXp}`);
+
+              // Show XP bar with animation
+              setShowXpBar(true);
+
+              // Animate XP bar width
+              Animated.timing(xpBarWidth, {
+                toValue: calculateFillPercentage(updatedXp),
+                duration: 1000, // Animation duration
+                useNativeDriver: false, // Width animation requires `false`
+              }).start();
+
+              // Fade in XP bar and text
+              Animated.timing(fadeAnim, {
+                toValue: 1, // Fully visible
+                duration: 500, // Fade-in duration
+                useNativeDriver: true,
+              }).start();
+
+              // Hide XP bar after 5 seconds
+              setTimeout(() => {
+                // Fade out XP bar and text
+                Animated.timing(fadeAnim, {
+                  toValue: 0, // Fully invisible
+                  duration: 500, // Fade-out duration
+                  useNativeDriver: true,
+                }).start(() => setShowXpBar(false)); // Hide after fade-out
+              }, 5000);
+            } catch (error) {
+              console.error('Error adding XP:', error);
+            }
+          })();
+
+          // Move to the next pose
           setCurrentPoseIndex((prevIndex) =>
             prevIndex < poses.length - 1 ? prevIndex + 1 : prevIndex
           );
@@ -89,24 +139,17 @@ const BeginnerYoga = () => {
 
       {currentPoseIndex < poses.length ? (
         <View style={{ alignItems: 'center' }}>
-          {/* Pose Image */}
           <Image
             source={{ uri: poses[currentPoseIndex].image }}
             style={{ width: 300, height: 300, borderRadius: 12, marginBottom: 20 }}
             resizeMode="contain"
           />
-
-          {/* Pose Name */}
           <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', marginBottom: 10 }}>
             {poses[currentPoseIndex].name}
           </Text>
-
-          {/* Pose Directions */}
           <Text style={{ fontSize: 16, color: '#aaa', textAlign: 'center', marginBottom: 20, marginHorizontal: 20 }}>
             {poses[currentPoseIndex].directions}
           </Text>
-
-          {/* Timer */}
           {isTimerActive ? (
             <Text style={{ fontSize: 20, color: '#FF6347', marginBottom: 20 }}>
               Time Remaining: {timeRemaining}s
@@ -116,12 +159,10 @@ const BeginnerYoga = () => {
               Ready? Press Start to Begin
             </Text>
           )}
-
-          {/* Start Button */}
           {!isTimerActive && (
             <TouchableOpacity
               style={{
-                backgroundColor: '#1E90FF',
+                backgroundColor: '#E55837',
                 padding: 16,
                 borderRadius: 8,
                 width: 200,
@@ -139,6 +180,47 @@ const BeginnerYoga = () => {
             Great Job! You Completed the Session 🎉
           </Text>
         </View>
+      )}
+
+      {/* XP Bar and Level */}
+      {showXpBar && (
+        <Animated.View
+          style={{
+            position: 'absolute',
+            bottom: 60,
+            left: 16,
+            right: 16,
+            alignItems: 'center',
+            opacity: fadeAnim, // Bind opacity to fadeAnim
+          }}
+        >
+          {/* Level and XP */}
+          <Text style={{ fontSize: 16, color: '#fff', marginBottom: 5 }}>
+            Level: {calculateLevel(xp)} | XP: {xp}
+          </Text>
+
+          {/* XP Bar */}
+          <View
+            style={{
+              height: 20,
+              backgroundColor: '#444',
+              borderRadius: 10,
+              overflow: 'hidden',
+              width: '100%',
+            }}
+          >
+            <Animated.View
+              style={{
+                height: '100%',
+                backgroundColor: '#E55837',
+                width: xpBarWidth.interpolate({
+                  inputRange: [0, 100],
+                  outputRange: ['0%', '100%'],
+                }),
+              }}
+            />
+          </View>
+        </Animated.View>
       )}
     </SafeAreaView>
   );

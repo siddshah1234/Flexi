@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { useEffect } from "react";
 import { SplashScreen, Stack } from 'expo-router';
 import { useFonts } from 'expo-font'
+import { XpProvider } from '../app/(tabs)/XpContext';
 import "../global.css";
 
 import GlobalProvider from '../context/globalprovider';
@@ -38,16 +39,20 @@ const RootLayout = () => {
   }
 
   return (
-    <GlobalProvider>
-      <Stack options={{ headerShown: false }}>
-        <Stack.Screen name="index" options={{ headerShown: false}} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false}} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
-        <Stack.Screen name="(workouts)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: ""}} />
-        <Stack.Screen name="(resourcesTab)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "Resources", headerTitleStyle: {color: 'white', fontSize: 25}}} />
-        <Stack.Screen name="(running2)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: ""}} />
-      </Stack>
-    </GlobalProvider>
+    <XpProvider>
+      <GlobalProvider>
+        <Stack options={{ headerShown: false }}>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(workouts)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
+          <Stack.Screen name="(hiit)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
+          <Stack.Screen name="(trivia)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
+          <Stack.Screen name="(resourcesTab)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "Resources", headerTitleStyle: { color: 'white', fontSize: 25 }, headerTintColor: "#E55837" }} />
+          <Stack.Screen name="(running2)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "" }} />
+        </Stack>
+      </GlobalProvider>
+    </XpProvider>
   )
 }
 

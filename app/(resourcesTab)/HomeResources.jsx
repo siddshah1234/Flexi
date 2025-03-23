@@ -13,16 +13,16 @@ const HomeResources = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-      {resources.map((resource, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.resourceBox}
-          onPress={() => Linking.openURL(resource.url)}
-        >
-          <Image source={{ uri: resource.image }} style={styles.image} />
-          <Text style={styles.resourceTitle}>{resource.title}</Text>
-        </TouchableOpacity>
-      ))}
+        {resources.map((resource, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.resourceBox}
+            onPress={() => Linking.openURL(resource.url)}
+          >
+            <Image source={{ uri: resource.image }} style={styles.image} />
+            <Text style={styles.resourceTitle}>{resource.title}</Text>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
