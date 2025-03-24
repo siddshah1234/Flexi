@@ -42,7 +42,7 @@ const homehiit = () => {
         {/* AMRAP HIIT */}
         <TouchableOpacity
           style={styles.card}
-          onPress={() => router.push('ampraphiit')}
+          onPress={() => router.push('amraphiit')}
         >
           <ImageBackground
             source={{ uri: 'https://domf5oio6qrcr.cloudfront.net/medialibrary/15812/gettyimages-1436388527.jpg' }}

@@ -25,13 +25,6 @@ const exercise = () => {
     return Math.floor(xp / maxXp) + 1;
   };
 
-  // const addXp = (amount) => {
-  //   const userDocument = getCurrentUser();
-  //   setXp((prevXp) => prevXp + amount);
-  //   userDocument.xp += amount;
-  //   return userDocument.xp;
-  // };
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -63,40 +56,15 @@ const exercise = () => {
     }, 2000);
   };
 
-
-  // const activities = [
-  //   {
-  //     id: '1',
-  //     title: 'Guided Walking',
-  //     description: 'Explore guided walking paths.',
-  //     onPress: () => router.push('/running/running'), // Navigate to Running Tracker
-  //     //image: require('../../assets/walking.png'),
-  //   },
-  //   {
-  //     id: '2',
-  //     title: 'Guided Yoga',
-  //     description: 'Relax with guided yoga sessions.',
-  //     onPress: () => router.push('/workouts/YogaHomeScreen'), // Navigate to Yoga Home Screen
-  //     //image: require('../../assets/yoga.png'),
-  //   },
-  //   {
-  //     id: '3',
-  //     title: 'Stretch Breaks',
-  //     description: 'Take quick stretch breaks to refresh your body.',
-
-  //     //image: require('../../assets/stretching.png'),
-  //   },
-  // ];
-
   const challenges = [
-    { id: '1', title: 'Walk 5,000 Steps', reward: '🏆 50 XP ✅ ' },
+    { id: '1', title: 'Complete any HIIT', reward: '🏆 50 XP ✅ ' },
     { id: '2', title: 'Complete a Yoga Session', reward: '🎖️ 10 XP' },
-    { id: '3', title: 'Finish both Beginner and Advanced Yoga Session ', reward: '✨ 75 XP' },
+    { id: '3', title: 'Get a Perfect Score in Triva', reward: '✨ 75 XP' },
   ];
 
   const leaderboard = [
-    { id: '2', name: 'Siddhant', score: 1120 },
-    { id: '3', name: 'Dylan', score: 20 },
+    { id: '2', name: 'Siddhant', score: 2120 },
+    { id: '3', name: 'Dylan', score: 1720 },
   ];
 
   // Add current user to leaderboard
@@ -156,6 +124,41 @@ const exercise = () => {
                   contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }} // Add padding for spacing
                 >
                   <View className="flex flex-row gap-6 items-center">
+                    {/* Basic Games */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                      <View className="flex justify-center items-center flex-row w-full">
+                        <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
+                          <Image
+                            source={images.basic1}
+                            className="w-full h-full rounded-lg"
+                            resizeMode="cover"
+                          />
+                        </View>
+                        <View className="flex justify-center flex-1 ml-3 gap-y-1">
+                          <Text
+                            className="font-psemibold text-sm text-white"
+                            numberOfLines={1}>
+                            Basic Exercise
+                          </Text>
+                          <Text
+                            className="text-xs text-gray-100 font-pregular"
+                            numberOfLines={1}>
+                            Do Basic Exercise with a Video on the side!
+                          </Text>
+                        </View>
+                      </View>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => router.push('basic')}
+                        className="w-full h-60 rounded-xl relative flex justify-center items-center"
+                      >
+                        <Image
+                          source={images.basic}
+                          className="w-full h-full rounded-xl mt-3"
+                          resizeMode="cover"
+                        />
+                      </TouchableOpacity>
+                    </View>
                     {/* Party Games */}
                     <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
                       <View className="flex justify-center items-center flex-row w-full">
@@ -181,11 +184,46 @@ const exercise = () => {
                       </View>
                       <TouchableOpacity
                         activeOpacity={0.7}
-                        onPress={() => router.push('triviahome')}
+                        onPress={() => router.push('partyGame')}
                         className="w-full h-60 rounded-xl relative flex justify-center items-center"
                       >
                         <Image
                           source={images.party}
+                          className="w-full h-full rounded-xl mt-3"
+                          resizeMode="cover"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    {/* Trvia Games */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                      <View className="flex justify-center items-center flex-row w-full">
+                        <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
+                          <Image
+                            source={images.question}
+                            className="w-full h-full rounded-lg"
+                            resizeMode="cover"
+                          />
+                        </View>
+                        <View className="flex justify-center flex-1 ml-3 gap-y-1">
+                          <Text
+                            className="font-psemibold text-sm text-white"
+                            numberOfLines={1}>
+                            Trivia
+                          </Text>
+                          <Text
+                            className="text-xs text-gray-100 font-pregular"
+                            numberOfLines={1}>
+                            Test your knowledge with fun trivia games!
+                          </Text>
+                        </View>
+                      </View>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => router.push('triviahome')}
+                        className="w-full h-60 rounded-xl relative flex justify-center items-center"
+                      >
+                        <Image
+                          source={images.question1}
                           className="w-full h-full rounded-xl mt-3"
                           resizeMode="cover"
                         />
