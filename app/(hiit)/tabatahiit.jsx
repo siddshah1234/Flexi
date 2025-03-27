@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Modal,
   StyleSheet,
 } from 'react-native';
+import { Audio } from 'expo-av';
 import { useXp } from '../(tabs)/XpContext';
 
 const tabatahiit = () => {
@@ -16,7 +17,7 @@ const tabatahiit = () => {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [showXpBar, setShowXpBar] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+  const [showModal, setShowModal] = useState(false);
   const xpBarWidth = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const { addXp, xp, calculateLevel } = useXp();
@@ -68,7 +69,6 @@ const tabatahiit = () => {
         if (prev <= 1) {
           clearInterval(interval);
 
-          // Award XP only on exercises, not rest
           if (steps[currentStep].name !== 'Rest') {
             (async () => {
               try {
@@ -122,7 +122,6 @@ const tabatahiit = () => {
 
       {currentStep < steps.length ? (
         <View style={{ alignItems: 'center' }}>
-          {/* Exercise Image */}
           <TouchableOpacity onPress={() => setShowModal(true)}>
             <Image
               source={{ uri: steps[currentStep].image }}
@@ -131,12 +130,10 @@ const tabatahiit = () => {
             />
           </TouchableOpacity>
 
-          {/* Exercise Name */}
           <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', marginBottom: 10 }}>
             {steps[currentStep].name}
           </Text>
 
-          {/* Timer */}
           {isTimerActive ? (
             <Text style={{ fontSize: 20, color: '#FF6347', marginBottom: 20 }}>
               Time Remaining: {timeRemaining}s
@@ -147,7 +144,6 @@ const tabatahiit = () => {
             </Text>
           )}
 
-          {/* Start Button */}
           {!isTimerActive && (
             <TouchableOpacity
               style={{
@@ -171,7 +167,6 @@ const tabatahiit = () => {
         </View>
       )}
 
-      {/* XP Bar */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -210,11 +205,10 @@ const tabatahiit = () => {
         </Animated.View>
       )}
 
-      {/* Modal for Exercise Description */}
       <Modal
         visible={showModal}
         transparent={true}
-        animationType="fade" // Modal fades in and out
+        animationType="fade"
         onRequestClose={() => setShowModal(false)}
       >
         <View style={styles.modalContainer}>

@@ -11,31 +11,31 @@ const RunningStretches = () => {
       name: 'Leg Swings',
       duration: 30, // In seconds
       directions: 'Hold onto a wall and swing one leg forward and backward. Then, switch legs. Keep movements controlled.',
-      image: 'https://www.spotebi.com/wp-content/uploads/2015/03/lateral-leg-swings-exercise-illustration.jpg',
+      image: 'https://www.spotebi.com/wp-content/uploads/2015/03/forward-leg-swings-exercise-illustration.gif',
     },
     {
       name: 'Standing Quad Stretch',
       duration: 30,
       directions: 'Stand on one leg, grab your ankle, and pull your heel toward your glutes. Keep knees together. Switch legs.',
-      image: 'https://www.spotebi.com/wp-content/uploads/2015/03/quad-stretch-exercise-illustration.jpg',
+      image: 'https://www.spotebi.com/wp-content/uploads/2015/03/quad-stretch-exercise-illustration.gif',
     },
     {
-      name: 'Downward Dog Stretch',
+      name: 'Calf Stretch',
       duration: 45,
-      directions: 'Start on hands and feet, lift hips high, and push heels toward the ground. Hold this position.',
-      image: 'https://www.spotebi.com/wp-content/uploads/2015/11/downward-facing-dog-pose-adho-mukha-svanasana.jpg',
+      directions: 'Stand with one foot forward, the other back, and press your back heel into the ground. Switch legs.',
+      image: 'https://www.spotebi.com/wp-content/uploads/2015/03/calf-stretch-exercise-illustration.gif',
     },
     {
       name: 'Lying Hamstring Stretch',
       duration: 30,
       directions: 'Lie on your back, extend one leg, and pull it toward you with both hands. Switch legs.',
-      image: 'https://www.spotebi.com/wp-content/uploads/2015/03/hamstring-stretch-exercise-illustration.jpg',
+      image: 'https://www.spotebi.com/wp-content/uploads/2015/03/hamstring-stretch-exercise-illustration.gif',
     },
     {
-      name: 'Figure Four Stretch',
+      name: 'Glute Stretch',
       duration: 30,
-      directions: 'Lie on your back, cross one ankle over the opposite knee, and pull the bottom leg toward your chest. Switch legs.',
-      image: 'https://www.spotebi.com/wp-content/uploads/2015/04/glute-stretch-exercise-illustration.jpg',
+      directions: 'Lie on your back, cross one ankle over the opposite knee, and gently press the top knee away. Switch legs.',
+      image: 'https://www.spotebi.com/wp-content/uploads/2015/04/glute-stretch-exercise-illustration.gif',
     },
   ];
 

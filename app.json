@@ -10,13 +10,20 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "package": "com.beatityo.flexi"
+      "package": "com.beatityo.flexi",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs access to your camera.",
+        "NSMicrophoneUsageDescription": "This app needs access to your microphone."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+        
+      },
+      "permissions": ["CAMERA", "RECORD_AUDIO", "INTERNET"]
+      
     },
     "web": {
       "bundler": "metro",

@@ -1,16 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, ImageBackground, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { useMusic } from '../../context/MusicContext'; // Adjust the path based on your file structure
 
 const homehiit = () => {
+  const { selectedTrack, setSelectedTrack } = useMusic(); // Access both selectedTrack and setSelectedTrack
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>HIIT Circuits</Text>
+
+      {/* 🎵 Music Selection Buttons */}
+      <View style={styles.musicRow}>
+        {['chill', 'pop', 'rock'].map((track) => (
+          <TouchableOpacity
+            key={track}
+            style={[
+              styles.musicButton,
+              selectedTrack === track && styles.musicButtonSelected,
+            ]}
+            onPress={() => setSelectedTrack(track)} // Set the selected track
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>{track.toUpperCase()}</Text>
+          </TouchableOpacity>
+        ))}
+
+        {/* No Music Button */}
+        <TouchableOpacity
+          style={[
+            styles.musicButton,
+            selectedTrack === null && styles.musicButtonSelected,
+          ]}
+          onPress={() => setSelectedTrack(null)} // Stop music
+        >
+          <Text style={{ color: '#fff', fontWeight: 'bold' }}>NO MUSIC</Text>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.contentContainer}>
         {/* Tabata HIIT */}
         <TouchableOpacity
           style={styles.card}
-          onPress={() => router.push('tabatahiit')}
+          onPress={() => router.push('tabatahiit')} // Navigate without stopping music
         >
           <ImageBackground
             source={{ uri: 'https://www.42klickschiro.com/wp-content/uploads/2022/09/man-doing-high-intensity-interval-workout.jpg' }}
@@ -26,7 +58,7 @@ const homehiit = () => {
         {/* EMOM HIIT */}
         <TouchableOpacity
           style={styles.card}
-          onPress={() => router.push('emomhiit')}
+          onPress={() => router.push('emomhiit')} // Navigate without stopping music
         >
           <ImageBackground
             source={{ uri: 'https://www.healthdigest.com/img/gallery/why-hiit-workouts-are-great-for-people-short-on-time/intro-1654287104.jpg' }}
@@ -42,7 +74,7 @@ const homehiit = () => {
         {/* AMRAP HIIT */}
         <TouchableOpacity
           style={styles.card}
-          onPress={() => router.push('amraphiit')}
+          onPress={() => router.push('amraphiit')} // Navigate without stopping music
         >
           <ImageBackground
             source={{ uri: 'https://domf5oio6qrcr.cloudfront.net/medialibrary/15812/gettyimages-1436388527.jpg' }}
@@ -53,22 +85,6 @@ const homehiit = () => {
         </TouchableOpacity>
         <Text style={styles.description}>
           Pick a few moves and repeat them nonstop! Go at your pace and see how many rounds you can do.
-        </Text>
-
-        {/* Ladder HIIT */}
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => router.push('ladderhiit')}
-        >
-          <ImageBackground
-            source={{ uri: 'https://www.insidefitnessmag.com/cdn/shop/articles/the-fitness-industrys-obsession-with-hiit-949423.jpg?v=1704406545' }}
-            style={styles.imageBackground}
-          >
-            <Text style={styles.cardText}>Ladder HIIT</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-        <Text style={styles.description}>
-          Start small and build up each round. It’s fun, simple, and gets harder as you go! Just follow along.
         </Text>
       </View>
     </SafeAreaView>
@@ -83,24 +99,39 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   header: {
-    fontSize: 24, // Reduced font size
+    fontSize: 24,
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
   },
+  musicRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 15,
+  },
+  musicButton: {
+    backgroundColor: '#444',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginHorizontal: 5,
+  },
+  musicButtonSelected: {
+    backgroundColor: '#E55837',
+  },
   contentContainer: {
     flex: 1,
-    justifyContent: 'space-evenly', // Distribute items evenly
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   card: {
-    width: '85%', // Reduced width
-    height: 100, // Reduced height
+    width: '85%',
+    height: 100,
     borderRadius: 10,
     overflow: 'hidden',
-    elevation: 3, // Android shadow
-    shadowColor: '#000', // iOS shadow
+    elevation: 3,
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -114,7 +145,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardText: {
-    fontSize: 14, // Reduced font size
+    fontSize: 14,
     color: '#fff',
     fontWeight: 'bold',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -122,11 +153,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   description: {
-    fontSize: 10, // Reduced font size
+    fontSize: 10,
     color: '#CDCDE0',
     textAlign: 'center',
     paddingHorizontal: 8,
-    lineHeight: 14, // Adjusted for readability
+    lineHeight: 14,
   },
 });
 

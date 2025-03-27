@@ -6,6 +6,7 @@ import { XpProvider } from '../app/(tabs)/XpContext';
 import "../global.css";
 
 import GlobalProvider from '../context/globalprovider';
+import { MusicProvider } from '../context/MusicContext';
 
 SplashScreen.preventAutoHideAsync()
 
@@ -39,6 +40,7 @@ const RootLayout = () => {
   }
 
   return (
+    <MusicProvider>
     <XpProvider>
       <GlobalProvider>
         <Stack options={{ headerShown: false }}>
@@ -50,9 +52,11 @@ const RootLayout = () => {
           <Stack.Screen name="(trivia)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
           <Stack.Screen name="(resourcesTab)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "Resources", headerTitleStyle: { color: 'white', fontSize: 25 }, headerTintColor: "#E55837" }} />
           <Stack.Screen name="(running2)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "" }} />
+          <Stack.Screen name="(party)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
         </Stack>
       </GlobalProvider>
     </XpProvider>
+    </MusicProvider>
   )
 }
 

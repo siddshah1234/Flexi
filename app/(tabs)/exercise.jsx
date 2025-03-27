@@ -7,6 +7,8 @@ import { getAccount, getCurrentUser, updateUser } from '../../lib/appwrite';
 import { useNavigation } from '@react-navigation/native';
 import { Redirect, router, link } from "expo-router";
 import { useXp } from '../(tabs)/XpContext';
+import { useFocusEffect } from '@react-navigation/native';
+import { MusicProvider, useMusic } from '../../context/MusicContext';
 
 const exercise = () => {
 
@@ -14,6 +16,16 @@ const exercise = () => {
   const [user, setUser] = useState(null);
   const { addXp, xp } = useXp()
   const navigation = useNavigation();
+  const { selectedTrack, setSelectedTrack } = useMusic(); // Access the setter for stopping music
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('Stopping music...'); // Debug log
+      console.log('Current track before stopping:', selectedTrack); // Debug log
+      setSelectedTrack(null); // Stop the music
+      console.log('Track after stopping:', selectedTrack); // Debug log
+    }, [])
+  );
 
   const calculateFillPercentage = (xp) => {
     const maxXp = 100; // Example max XP value
@@ -184,7 +196,7 @@ const exercise = () => {
                       </View>
                       <TouchableOpacity
                         activeOpacity={0.7}
-                        onPress={() => router.push('partyGame')}
+                        onPress={() => router.push('partyHome')}
                         className="w-full h-60 rounded-xl relative flex justify-center items-center"
                       >
                         <Image
