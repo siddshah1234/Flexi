@@ -182,7 +182,7 @@ const exercise = () => {
                           <Text
                             className="font-psemibold text-sm text-white"
                             numberOfLines={1}>
-                            Group Exercise
+                            Group Activities
                           </Text>
                           <Text
                             className="text-xs text-gray-100 font-pregular"

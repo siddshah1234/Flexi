@@ -7,7 +7,7 @@ const stretcheshome = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.header}>Party Games</Text>
+            <Text style={styles.header}>Group Activities</Text>
 
             <View style={styles.contentContainer}>
                 {/* Running Stretches */}
@@ -29,11 +29,11 @@ const stretcheshome = () => {
                         source={{ uri: 'https://img.freepik.com/free-vector/quiz-game-stage-interior-design-background-competition-with-questions-television-trivia-show-three-stands-with-microphones-spotlight-screens-with-questions_575670-1939.jpg' }}
                         style={styles.imageBackground}
                     >
-                        <Text style={styles.cardText}>Jepordy</Text>
+                        <Text style={styles.cardText}>Jeopardy</Text>
                     </ImageBackground>
                 </TouchableOpacity>
                 <Text style={styles.description}>
-                    Play a game of Jepordy with your friends! This is a great way to test your knowledge, have fun, and exercise all at the same time.
+                    Play a game of Jeopardy with your friends! This is a great way to test your knowledge, have fun, and exercise all at the same time.
                 </Text>
             </View>
         </SafeAreaView>
