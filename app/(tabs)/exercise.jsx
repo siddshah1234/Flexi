@@ -20,10 +20,7 @@ const exercise = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log('Stopping music...'); // Debug log
-      console.log('Current track before stopping:', selectedTrack); // Debug log
       setSelectedTrack(null); // Stop the music
-      console.log('Track after stopping:', selectedTrack); // Debug log
     }, [])
   );
 
@@ -185,12 +182,12 @@ const exercise = () => {
                           <Text
                             className="font-psemibold text-sm text-white"
                             numberOfLines={1}>
-                            Party Games
+                            Group Exercise
                           </Text>
                           <Text
                             className="text-xs text-gray-100 font-pregular"
                             numberOfLines={1}>
-                            Get into action with party excerise games!
+                            Get into action with friends while you exercise!
                           </Text>
                         </View>
                       </View>
@@ -312,6 +309,42 @@ const exercise = () => {
                         />
                       </TouchableOpacity>
                     </View>
+                    {/*Stretches Activity */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                      <View className="flex justify-center items-center flex-row w-full">
+                        <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
+                          <Image
+                            source={images.forest}
+                            className="w-full h-full rounded-lg"
+                            resizeMode="cover"
+                          />
+                        </View>
+                        <View className="flex justify-center flex-1 ml-3 gap-y-1">
+                          <Text
+                            className="font-psemibold text-sm text-white"
+                            numberOfLines={1}>
+                            Regular Stretches
+                          </Text>
+                          <Text
+                            className="text-xs text-gray-100 font-pregular"
+                            numberOfLines={1}>
+                            Warm up with some stretches before your workout!
+                          </Text>
+                        </View>
+                      </View>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => router.push('stretcheshome')}
+                        className="w-full h-60 rounded-xl mt-3 relative flex justify-center items-center"
+                      >
+                        <Image
+                          source={images.stretch}
+                          className="w-full h-full rounded-xl"
+                          resizeMode="cover"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    
                   </View>
                 </ScrollView>
               </View>

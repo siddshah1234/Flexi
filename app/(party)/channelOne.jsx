@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
+  Modal
 } from 'react-native';
 import { WebView } from 'react-native-webview';
+import { useXp } from '../(tabs)/XpContext';
 
 const steps = [
   {
@@ -66,20 +68,62 @@ const channelOne = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef(null);
+  const [showXpBar, setShowXpBar] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const xpBarWidth = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const { addXp, xp, calculateLevel } = useXp();
 
   const startWorkout = () => {
     setRunning(true);
     setTimeLeft(steps[stepIndex].duration);
+
+    const calculateFillPercentage = (xp) => {
+      const maxXp = 100;
+      return ((xp % maxXp) / maxXp) * 100;
+    };
+
     intervalRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(intervalRef.current);
+
           if (stepIndex < steps.length - 1) {
-            setStepIndex(stepIndex + 1);
-            setTimeout(() => startWorkout(), 1000);
+            setStepIndex((prevIndex) => prevIndex + 1); // Move to the next step
+            setTimeLeft(steps[stepIndex + 1].duration); // Set the time for the next step
+            startWorkout(); // Restart the workout for the next step
           } else {
-            setRunning(false);
+            setRunning(false); // End the workout
           }
+          (async () => {
+            try {
+              const addedXp = 15;
+              const updatedXp = await addXp(addedXp);
+
+              setShowXpBar(true);
+              Animated.timing(xpBarWidth, {
+                toValue: calculateFillPercentage(updatedXp),
+                duration: 1000,
+                useNativeDriver: false,
+              }).start();
+
+              Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 500,
+                useNativeDriver: true,
+              }).start();
+
+              setTimeout(() => {
+                Animated.timing(fadeAnim, {
+                  toValue: 0,
+                  duration: 500,
+                  useNativeDriver: true,
+                }).start(() => setShowXpBar(false));
+              }, 5000);
+            } catch (error) {
+              console.error('Error adding XP:', error);
+            }
+          })();
         }
         return prev - 1;
       });
@@ -94,7 +138,7 @@ const channelOne = () => {
           source={{ uri: 'https://flexi.daily.co/channelOne' }}
           allowsInlineMediaPlayback
           mediaPlaybackRequiresUserAction={false}
-          style={{ flex: 1 }}
+          style={styles.webView}
         />
       </View>
 
@@ -122,6 +166,43 @@ const channelOne = () => {
           <Text style={styles.name}>🎉 You finished the circuit!</Text>
         )}
       </View>
+      {showXpBar && (
+        <Animated.View
+          style={{
+            position: 'absolute',
+            bottom: 60,
+            left: 16,
+            right: 16,
+            alignItems: 'center',
+            opacity: fadeAnim,
+          }}
+        >
+          <Text style={{ fontSize: 16, color: '#fff', marginBottom: 5 }}>
+            Level: {calculateLevel(xp)} | XP: {xp}
+          </Text>
+
+          <View
+            style={{
+              height: 20,
+              backgroundColor: '#444',
+              borderRadius: 10,
+              overflow: 'hidden',
+              width: '100%',
+            }}
+          >
+            <Animated.View
+              style={{
+                height: '100%',
+                backgroundColor: '#E55837',
+                width: xpBarWidth.interpolate({
+                  inputRange: [0, 100],
+                  outputRange: ['0%', '100%'],
+                }),
+              }}
+            />
+          </View>
+        </Animated.View>
+      )}
     </SafeAreaView>
   );
 };
@@ -136,6 +217,12 @@ const styles = StyleSheet.create({
   videoContainer: {
     flex: 1,
     backgroundColor: '#000',
+    maxHeight: 300, // Limit the height of the video container
+  },
+  webView: {
+    flex: 1,
+    borderRadius: 10, // Add rounded corners to the WebView
+    overflow: 'hidden',
   },
   workoutContainer: {
     flex: 1,

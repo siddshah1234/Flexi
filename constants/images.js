@@ -12,5 +12,7 @@ import question from "../assets/images/question.png";
 import question1 from "../assets/images/question1.png";
 import basic from "../assets/images/basic.png";
 import basic1 from "../assets/images/basic1.png";
+import stretch from "../assets/images/stretch.png";
+import forest from "../assets/images/forest.png";
 
-export default { profile, thumbnail, cards, path, logo, logoSmall, empty, pose, party, game, question, question1, basic, basic1 };
+export default { profile, thumbnail, cards, path, logo, logoSmall, empty, pose, party, game, question, question1, basic, basic1, stretch, forest };

@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
-import { View, Text, Image, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, Image, SafeAreaView, TouchableOpacity, Animated, Modal } from 'react-native';
+import { useXp } from '../(tabs)/XpContext';
 
 const WeightliftingStretches = () => {
   const [currentStretchIndex, setCurrentStretchIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
+  const [showXpBar, setShowXpBar] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const xpBarWidth = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const { addXp, xp, calculateLevel } = useXp();
 
   // note for siddhant to look at his poe account for the stretches for weightlifting
 
-  
+
   const stretches = [
     {
       name: 'Standing Arm Circles',
@@ -70,14 +76,48 @@ const WeightliftingStretches = () => {
     setIsTimerActive(true);
     setTimeRemaining(stretches[currentStretchIndex].duration);
 
+    const calculateFillPercentage = (xp) => {
+      const maxXp = 100;
+      return ((xp % maxXp) / maxXp) * 100;
+    };
+
     const interval = setInterval(() => {
       setTimeRemaining((prev) => {
-        if (prev <= 1) {
+        if (prev <= 28) {
           clearInterval(interval);
           setIsTimerActive(false);
           setCurrentStretchIndex((prevIndex) =>
             prevIndex < stretches.length - 1 ? prevIndex + 1 : prevIndex
           );
+          (async () => {
+            try {
+              const addedXp = 10;
+              const updatedXp = await addXp(addedXp);
+
+              setShowXpBar(true);
+              Animated.timing(xpBarWidth, {
+                toValue: calculateFillPercentage(updatedXp),
+                duration: 1000,
+                useNativeDriver: false,
+              }).start();
+
+              Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 500,
+                useNativeDriver: true,
+              }).start();
+
+              setTimeout(() => {
+                Animated.timing(fadeAnim, {
+                  toValue: 0,
+                  duration: 500,
+                  useNativeDriver: true,
+                }).start(() => setShowXpBar(false));
+              }, 5000);
+            } catch (error) {
+              console.error('Error adding XP:', error);
+            }
+          })();
         }
         return prev - 1;
       });
@@ -124,7 +164,7 @@ const WeightliftingStretches = () => {
           {!isTimerActive && (
             <TouchableOpacity
               style={{
-                backgroundColor: '#1E90FF',
+                backgroundColor: '#E55837',
                 padding: 16,
                 borderRadius: 8,
                 width: 200,
@@ -142,6 +182,43 @@ const WeightliftingStretches = () => {
             Great Job! You Completed the Routine 🎉
           </Text>
         </View>
+      )}
+      {showXpBar && (
+        <Animated.View
+          style={{
+            position: 'absolute',
+            bottom: 60,
+            left: 16,
+            right: 16,
+            alignItems: 'center',
+            opacity: fadeAnim,
+          }}
+        >
+          <Text style={{ fontSize: 16, color: '#fff', marginBottom: 5 }}>
+            Level: {calculateLevel(xp)} | XP: {xp}
+          </Text>
+
+          <View
+            style={{
+              height: 20,
+              backgroundColor: '#444',
+              borderRadius: 10,
+              overflow: 'hidden',
+              width: '100%',
+            }}
+          >
+            <Animated.View
+              style={{
+                height: '100%',
+                backgroundColor: '#E55837',
+                width: xpBarWidth.interpolate({
+                  inputRange: [0, 100],
+                  outputRange: ['0%', '100%'],
+                }),
+              }}
+            />
+          </View>
+        </Animated.View>
       )}
     </SafeAreaView>
   );

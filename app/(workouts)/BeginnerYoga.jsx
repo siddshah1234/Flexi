@@ -88,7 +88,6 @@ const BeginnerYoga = () => {
             try {
               const addedXp = 20; // XP to add
               const updatedXp = await addXp(addedXp); // Add XP to the user
-              console.log(`XP added successfully! New XP: ${updatedXp}`);
 
               // Show XP bar with animation
               setShowXpBar(true);
