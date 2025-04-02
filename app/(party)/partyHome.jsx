@@ -11,7 +11,7 @@ const stretcheshome = () => {
 
             <View style={styles.contentContainer}>
                 {/* Running Stretches */}
-                <TouchableOpacity style={styles.card} onPress={() => router.push('channelOne')}>
+                <TouchableOpacity style={styles.card} onPress={() => router.push('allChannel')}>
                     <ImageBackground
                         source={{ uri: 'https://blog.nasm.org/hubfs/nasm_ttedig_nd15_groupft_1208x808.jpg' }}
                         style={styles.imageBackground}

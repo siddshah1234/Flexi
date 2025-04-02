@@ -31,10 +31,10 @@ const basic = () => {
 
   const steps = [
     {
-      name: 'Jumping Jacks',
+      name: 'Mountain Climbers',
       duration: 20,
-      image: 'https://www.spotebi.com/wp-content/uploads/2014/10/jumping-jacks-exercise-illustration.gif',
-      description: 'Stand upright with your legs together and arms at your sides. Jump while spreading your legs and raising your arms overhead, then return to the starting position.',
+      image: 'https://www.spotebi.com/wp-content/uploads/2014/10/mountain-climbers-exercise-illustration-spotebi.gif',
+      description: 'Start in a plank position and alternate bringing your knees toward your chest. Keep your core engaged and move quickly.',
     },
     {
       name: 'Rest',
@@ -67,10 +67,10 @@ const basic = () => {
       description: 'Take a short break to recover before the next exercise.',
     },
     {
-      name: 'Mountain Climbers',
+      name: 'Jumping Jacks',
       duration: 20,
-      image: 'https://www.spotebi.com/wp-content/uploads/2014/10/mountain-climbers-exercise-illustration-spotebi.gif',
-      description: 'Start in a plank position and alternate bringing your knees toward your chest. Keep your core engaged and move quickly.',
+      image: 'https://www.spotebi.com/wp-content/uploads/2014/10/jumping-jacks-exercise-illustration.gif',
+      description: 'Stand upright with your legs together and arms at your sides. Jump while spreading your legs and raising your arms overhead, then return to the starting position.',
     },
     {
       name: 'Rest',
