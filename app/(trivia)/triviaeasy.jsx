@@ -224,7 +224,7 @@ const triviaeasy = () => {
   };
 
   const handleNext = () => {
-    const xpToAdd = 3; // XP to add for each question
+    const xpToAdd = 50; // XP to add for each question
     addXp(xpToAdd); // Add XP to the user
     setSelectedAnswer(null);
     setShowResult(false);

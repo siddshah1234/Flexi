@@ -20,7 +20,7 @@ const stretcheshome = () => {
                     </ImageBackground>
                 </TouchableOpacity>
                 <Text style={styles.description}>
-                    Join a call with your friends and exercise togheter! With this, you can easily stay motivated and have fun while working out.
+                    Join a call with your friends and exercise together! With this, you can easily stay motivated and have fun while working out.
                 </Text>
 
                 {/* Weightlifting Stretches */}

@@ -72,8 +72,8 @@ const exercise = () => {
   ];
 
   const leaderboard = [
-    { id: '2', name: 'Siddhant', score: 2120 },
-    { id: '3', name: 'Dylan', score: 1720 },
+    { id: '2', name: 'User3', score: 2120 },
+    { id: '3', name: 'User2', score: 1720 },
   ];
 
   // Add current user to leaderboard
@@ -151,8 +151,8 @@ const exercise = () => {
                           </Text>
                           <Text
                             className="text-xs text-gray-100 font-pregular"
-                            numberOfLines={1}>
-                            Do Basic Exercise with a Video on the side!
+                            numberOfLines={2}>
+                            Do Basic Exercise with a Video on the side! Simply Enter a Youtube Link and begin your workout!
                           </Text>
                         </View>
                       </View>
@@ -327,7 +327,7 @@ const exercise = () => {
                           </Text>
                           <Text
                             className="text-xs text-gray-100 font-pregular"
-                            numberOfLines={1}>
+                            numberOfLines={2}>
                             Warm up with some stretches before your workout!
                           </Text>
                         </View>
