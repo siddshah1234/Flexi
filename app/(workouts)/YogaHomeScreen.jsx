@@ -1,3 +1,6 @@
+// this file defines the Yoga Home Screen
+// it provides navigation to Beginner and Advanced Yoga screens with descriptions and images
+
 import React from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, ImageBackground, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
@@ -96,7 +99,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 20,
     textAlign: 'center',
-    lineHeight: 20, // Improved readability
+    lineHeight: 20,
   },
 });
 

@@ -1,3 +1,8 @@
+// this screen runs a video call + workout combo for channel one
+// users can see others and do the circuit workout at the same time
+// each workout step gives 15 xp
+// the xp bar shows up after each step and fades away
+
 import React, { useState, useRef } from 'react';
 import {
   View,
@@ -7,73 +12,82 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
-  Modal
+  Modal,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useXp } from '../(tabs)/XpContext';
 
+// list of all exercises and rests in the circuit
 const steps = [
   {
     name: 'Jumping Jacks',
     duration: 20,
     image: 'https://www.spotebi.com/wp-content/uploads/2014/10/jumping-jacks-exercise-illustration.gif',
-    description: 'Stand upright with your legs together and arms at your sides. Jump while spreading your legs and raising your arms overhead, then return to the starting position.',
+    description: 'stand tall and jump while spreading your arms and legs, then return to start.',
   },
   {
     name: 'Rest',
     duration: 10,
     image: 'https://www.shutterstock.com/image-vector/woman-tired-resting-sit-after-260nw-2255199041.jpg',
-    description: 'Take a short break to recover before the next exercise.',
+    description: 'take a short break to recover before the next exercise.',
   },
   {
     name: 'Squats',
     duration: 20,
     image: 'https://www.spotebi.com/wp-content/uploads/2014/10/squat-exercise-illustration.gif',
-    description: 'Stand with your feet shoulder-width apart. Lower your body by bending your knees and pushing your hips back, then return to the starting position.',
+    description: 'lower your body by bending your knees and pushing your hips back, then stand back up.',
   },
   {
     name: 'Rest',
     duration: 10,
     image: 'https://www.shutterstock.com/image-vector/woman-tired-resting-sit-after-260nw-2255199041.jpg',
-    description: 'Take a short break to recover before the next exercise.',
+    description: 'take a short break to recover before the next exercise.',
   },
   {
     name: 'Push-Ups',
     duration: 20,
     image: 'https://www.spotebi.com/wp-content/uploads/2014/10/push-up-exercise-illustration.gif',
-    description: 'Start in a plank position with your hands shoulder-width apart. Lower your body until your chest nearly touches the floor, then push back up to the starting position.',
+    description: 'lower your chest to the floor then push back up. keep your body straight.',
   },
   {
     name: 'Rest',
     duration: 10,
     image: 'https://www.shutterstock.com/image-vector/woman-tired-resting-sit-after-260nw-2255199041.jpg',
-    description: 'Take a short break to recover before the next exercise.',
+    description: 'take a short break to recover before the next exercise.',
   },
   {
     name: 'Mountain Climbers',
     duration: 20,
     image: 'https://www.spotebi.com/wp-content/uploads/2014/10/mountain-climbers-exercise-illustration-spotebi.gif',
-    description: 'Start in a plank position and alternate bringing your knees toward your chest. Keep your core engaged and move quickly.',
+    description: 'in plank position, move your knees toward your chest one at a time, fast.',
   },
   {
     name: 'Rest',
     duration: 10,
     image: 'https://www.shutterstock.com/image-vector/woman-tired-resting-sit-after-260nw-2255199041.jpg',
-    description: 'Take a short break to recover before the next exercise.',
+    description: 'take a short break to recover before the next exercise.',
   },
 ];
 
 const channelOne = () => {
+  // current step in the workout
   const [stepIndex, setStepIndex] = useState(0);
+  // countdown timer
   const [timeLeft, setTimeLeft] = useState(0);
+  // if timer is active
   const [running, setRunning] = useState(false);
+  // to keep track of the timer
   const intervalRef = useRef(null);
+  // xp bar visibility
   const [showXpBar, setShowXpBar] = useState(false);
+  // modal visibility
   const [showModal, setShowModal] = useState(false);
+  // xp system functions
   const xpBarWidth = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const { addXp, xp, calculateLevel } = useXp();
 
+  // starts the timer and gives xp
   const startWorkout = () => {
     setRunning(true);
     setTimeLeft(steps[stepIndex].duration);
@@ -88,13 +102,16 @@ const channelOne = () => {
         if (prev <= 1) {
           clearInterval(intervalRef.current);
 
+          // move to next step or end workout
           if (stepIndex < steps.length - 1) {
-            setStepIndex((prevIndex) => prevIndex + 1); // Move to the next step
-            setTimeLeft(steps[stepIndex + 1].duration); // Set the time for the next step
-            startWorkout(); // Restart the workout for the next step
+            setStepIndex((prevIndex) => prevIndex + 1);
+            setTimeLeft(steps[stepIndex + 1].duration);
+            startWorkout();
           } else {
-            setRunning(false); // End the workout
+            setRunning(false);
           }
+
+          // add xp when step is done
           (async () => {
             try {
               const addedXp = 15;
@@ -132,8 +149,9 @@ const channelOne = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Video Call */}
+      {/* video call section */}
       <View style={styles.videoContainer}>
+        {/* WebView to run the video call */}
         <WebView
           source={{ uri: 'https://flexi.daily.co/channelOne' }}
           allowsInlineMediaPlayback
@@ -142,20 +160,23 @@ const channelOne = () => {
         />
       </View>
 
-      {/* Workout Section */}
+      {/* workout section */}
       <View style={styles.workoutContainer}>
         {stepIndex < steps.length ? (
           <>
+            {/* current step image */}
             <Image
               source={{ uri: steps[stepIndex].image }}
               style={styles.exerciseImage}
               resizeMode="contain"
             />
+            {/* exercise name and info */}
             <Text style={styles.name}>{steps[stepIndex].name}</Text>
             <Text style={styles.description}>{steps[stepIndex].description}</Text>
             <Text style={styles.timer}>
               {running ? `Time Left: ${timeLeft}s` : 'Ready to start?'}
             </Text>
+            {/* start button only if workout not running */}
             {!running && (
               <TouchableOpacity style={styles.button} onPress={startWorkout}>
                 <Text style={styles.buttonText}>Start Workout</Text>
@@ -166,6 +187,8 @@ const channelOne = () => {
           <Text style={styles.name}>🎉 You finished the circuit!</Text>
         )}
       </View>
+
+      {/* xp bar that shows up after a step */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -209,6 +232,7 @@ const channelOne = () => {
 
 export default channelOne;
 
+// styles for layout and design
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -217,11 +241,11 @@ const styles = StyleSheet.create({
   videoContainer: {
     flex: 1,
     backgroundColor: '#000',
-    maxHeight: 300, // Limit the height of the video container
+    maxHeight: 300,
   },
   webView: {
     flex: 1,
-    borderRadius: 10, // Add rounded corners to the WebView
+    borderRadius: 10,
     overflow: 'hidden',
   },
   workoutContainer: {

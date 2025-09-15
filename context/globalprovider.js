@@ -1,4 +1,6 @@
-// imports
+// this file defines a global context provider
+// it manages user authentication state and provides it to the app
+
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getCurrentUser } from "../lib/appwrite";
 

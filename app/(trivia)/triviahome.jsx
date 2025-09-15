@@ -1,3 +1,7 @@
+// this file is for the trivia home screen
+// it provides navigation to easy, medium, and hard trivia levels
+// each level has a description and an image background for visual appeal
+
 import React from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, ImageBackground, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
@@ -7,6 +11,7 @@ const triviahome = () => {
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Trivia Game</Text>
       <View style={styles.contentContainer}>
+        {/* Easy Trivia Card */}
         <TouchableOpacity
           style={styles.card}
           onPress={() => router.push('triviaeasy')}
@@ -22,6 +27,7 @@ const triviahome = () => {
           Start easy! Answer correctly and get a light workout. Get it wrong, and you'll have to work a little harder!
         </Text>
 
+        {/* Medium Trivia Card */}
         <TouchableOpacity
           style={styles.card}
           onPress={() => router.push('triviamedium')}
@@ -37,6 +43,7 @@ const triviahome = () => {
           The challenge increases! Right answers keep it manageable, but wrong answers mean tougher exercises. Stay sharp!
         </Text>
 
+        {/* Hard Trivia Card */}
         <TouchableOpacity
           style={styles.card}
           onPress={() => router.push('triviahard')}
@@ -64,7 +71,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   header: {
-    fontSize: 28, // Reduced font size to fit
+    fontSize: 28,
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -72,16 +79,16 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'space-evenly', // Distribute items evenly
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   card: {
-    width: '90%', // Reduced width to fit
-    height: 120, // Reduced height to fit
+    width: '90%',
+    height: 120,
     borderRadius: 12,
     overflow: 'hidden',
-    elevation: 5, // Android shadow
-    shadowColor: '#000', // iOS shadow
+    elevation: 5,
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -95,7 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardText: {
-    fontSize: 18, // Reduced font size to fit
+    fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -103,11 +110,11 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   description: {
-    fontSize: 12, // Reduced font size to fit
+    fontSize: 12,
     color: '#CDCDE0',
     textAlign: 'center',
     paddingHorizontal: 10,
-    lineHeight: 16, // Adjusted for readability
+    lineHeight: 16,
   },
 });
 

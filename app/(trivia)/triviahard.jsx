@@ -1,15 +1,30 @@
+// this file is for the hard trivia screen
+// it displays trivia questions with multiple-choice answers
+// users earn xp for answering questions and see their progress with an xp bar
+// wrong answers show the correct answer and assign a harder exercise
+// the screen includes animations and a modal for exercise descriptions
+
 import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, SafeAreaView, StyleSheet, Animated, Modal } from 'react-native';
 import { useXp } from '../(tabs)/XpContext';
 
 const triviahard = () => {
+  // state for tracking the current question index
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  // state for the selected answer
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  // state to show the result of the current question
   const [showResult, setShowResult] = useState(false);
+  // state to show the xp bar
   const [showXpBar, setShowXpBar] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State to control the modal visibility
-  const xpBarWidth = useRef(new Animated.Value(0)).current; // Animated value for XP bar width
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Animated value for opacity
+  // state to control the visibility of the modal
+  const [showModal, setShowModal] = useState(false);
+
+  // animated values for xp bar and opacity
+  const xpBarWidth = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  // xp context for managing xp and levels
   const { addXp, xp, calculateLevel } = useXp();
 
   const questions = [
@@ -113,68 +128,71 @@ const triviahard = () => {
       hard: '40 Tricep Dips',
       description: 'Sit on the edge of a chair with your hands gripping the edge. Lower your body by bending your elbows, then push back up to the starting position.',
     },
-    // Add more questions as needed...
   ];
 
+  // get the current question
   const current = questions[currentQuestionIndex];
   const isCorrect = selectedAnswer === current?.correctAnswer;
 
+  // handle when a user selects an answer
   const handleAnswer = (option) => {
     setSelectedAnswer(option);
     setShowResult(true);
   };
 
+  // handle moving to the next question
   const handleNext = () => {
-    const xpToAdd = 10; // XP to add for each question
-    addXp(xpToAdd); // Add XP to the user
+    const xpToAdd = 10; // xp to add for each question
+    addXp(xpToAdd); // add xp to the user
     setSelectedAnswer(null);
     setShowResult(false);
     setCurrentQuestionIndex((prev) => prev + 1);
 
-    // Show XP bar with animation
+    // show xp bar with animation
     setShowXpBar(true);
 
-    // Animate XP bar width
+    // animate xp bar width
     Animated.timing(xpBarWidth, {
       toValue: calculateFillPercentage(xp + xpToAdd),
-      duration: 1000, // Animation duration
-      useNativeDriver: false, // Width animation requires `false`
+      duration: 1000, // animation duration
+      useNativeDriver: false, // width animation requires `false`
     }).start();
 
-    // Fade in XP bar and text
+    // fade in xp bar and text
     Animated.timing(fadeAnim, {
-      toValue: 1, // Fully visible
-      duration: 500, // Fade-in duration
+      toValue: 1, // fully visible
+      duration: 500, // fade-in duration
       useNativeDriver: true,
     }).start();
 
-    // Hide XP bar after 5 seconds
+    // hide xp bar after 5 seconds
     setTimeout(() => {
-      // Fade out XP bar and text
+      // fade out xp bar and text
       Animated.timing(fadeAnim, {
-        toValue: 0, // Fully invisible
-        duration: 500, // Fade-out duration
+        toValue: 0, // fully invisible
+        duration: 500, // fade-out duration
         useNativeDriver: true,
-      }).start(() => setShowXpBar(false)); // Hide after fade-out
+      }).start(() => setShowXpBar(false)); // hide after fade-out
     }, 5000);
   };
 
+  // calculate the xp bar fill percentage
   const calculateFillPercentage = (xp) => {
-    const maxXp = 100; // Example max XP value
+    const maxXp = 100; // example max xp value
     return ((xp % maxXp) / maxXp) * 100;
   };
 
-  const { level } = calculateLevel(xp); // Calculate level for the XP bar
+  const { level } = calculateLevel(xp); // calculate level for the xp bar
 
   return (
     <SafeAreaView style={styles.container}>
       {currentQuestionIndex < questions.length ? (
         <View style={styles.content}>
-          {/* Question Section */}
+          {/* question section */}
           <View style={styles.questionContainer}>
             <Text style={styles.questionText}>{current.question}</Text>
 
-            {/* Show the correct answer if the user is wrong */}
+            {/* show the correct answer if the user is wrong */}
             {showResult && !isCorrect && (
               <Text style={styles.wrongAnswerText}>
                 Correct Answer: {current.correctAnswer}
@@ -196,7 +214,7 @@ const triviahard = () => {
             ))}
           </View>
 
-          {/* Result Section */}
+          {/* result section */}
           {showResult && (
             <View style={styles.resultContainer}>
               <Text
@@ -220,7 +238,7 @@ const triviahard = () => {
             </View>
           )}
 
-          {/* Next Button */}
+          {/* next button */}
           {!showXpBar && (
             <TouchableOpacity onPress={handleNext} style={styles.nextButton}>
               <Text style={styles.nextButtonText}>Next</Text>
@@ -233,7 +251,7 @@ const triviahard = () => {
         </View>
       )}
 
-      {/* XP Bar and Level */}
+      {/* xp bar and level */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -242,15 +260,15 @@ const triviahard = () => {
             left: 16,
             right: 16,
             alignItems: 'center',
-            opacity: fadeAnim, // Bind opacity to fadeAnim
+            opacity: fadeAnim, // bind opacity to fadeAnim
           }}
         >
-          {/* Level and XP */}
+          {/* level and xp */}
           <Text style={{ fontSize: 16, color: '#fff', marginBottom: 5 }}>
             Level: {calculateLevel(xp)} | XP: {xp}
           </Text>
 
-          {/* XP Bar */}
+          {/* xp bar */}
           <View
             style={{
               height: 20,
@@ -274,11 +292,11 @@ const triviahard = () => {
         </Animated.View>
       )}
 
-      {/* Modal for Exercise Description */}
+      {/* modal for exercise description */}
       <Modal
         visible={showModal}
         transparent={true}
-        animationType="fade" // Modal fades in and out
+        animationType="fade" // modal fades in and out
         onRequestClose={() => setShowModal(false)}
       >
         <View style={styles.modalContainer}>
@@ -321,7 +339,7 @@ const styles = StyleSheet.create({
   },
   wrongAnswerText: {
     fontSize: 16,
-    color: '#ff0e0a', // Red color for wrong answer
+    color: '#ff0e0a', // red color for wrong answer
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',

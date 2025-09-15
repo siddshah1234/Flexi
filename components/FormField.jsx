@@ -1,9 +1,12 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native'
-import React, { useState } from 'react'
-import { icons } from '../constants'
+// this file defines a reusable form field component
+// it supports dynamic styles, password visibility toggle, and text input handling
+
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { icons } from '../constants';
 
 const FormField = ({ title, value, placeholder, handleChangeText, otherStyles, ...props }) => {
-    const [showPassword, setshowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <View className={`space-y-2 ${otherStyles}`}>
@@ -16,18 +19,21 @@ const FormField = ({ title, value, placeholder, handleChangeText, otherStyles, .
                     placeholderTextColor="#7b7b8b"
                     onChangeText={handleChangeText}
                     secureTextEntry={title === 'Password' && !showPassword}
+                    {...props}
                 />
 
                 {title === 'Password' && (
-                    <TouchableOpacity onPress={() =>
-                        setshowPassword(!showPassword)}>
-                        <Image source={!showPassword ? icons.eyeHide : icons.eye} className="w-6 h-6"
-                            resizeMode='contain' />
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                        <Image
+                            source={!showPassword ? icons.eyeHide : icons.eye}
+                            className="w-6 h-6"
+                            resizeMode="contain"
+                        />
                     </TouchableOpacity>
                 )}
             </View>
         </View>
-    )
-}
+    );
+};
 
-export default FormField
+export default FormField;

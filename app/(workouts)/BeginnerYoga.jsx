@@ -1,3 +1,7 @@
+// this file defines the Beginner Yoga screen
+// it guides users through beginner yoga poses with timers and XP rewards
+// users earn XP for completing poses, and progress is visualized with an animated XP bar
+
 import React, { useState, useRef } from 'react';
 import { View, Text, Image, SafeAreaView, TouchableOpacity, Animated } from 'react-native';
 import { useXp } from '../(tabs)/XpContext';
@@ -7,14 +11,14 @@ const BeginnerYoga = () => {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [showXpBar, setShowXpBar] = useState(false);
-  const xpBarWidth = useRef(new Animated.Value(0)).current; // Animated value for XP bar width
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Animated value for opacity
+  const xpBarWidth = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   const { addXp, xp, calculateLevel } = useXp();
 
   const poses = [
     {
       name: 'Mountain Pose',
-      duration: 30, // In seconds
+      duration: 30,
       directions: 'Stand tall with feet together, shoulders relaxed, and arms at your side. Take deep breaths and focus on your posture.',
       image: 'https://pocketyoga.com/assets/images/full/MountainArmsSide.png',
     },
@@ -28,7 +32,7 @@ const BeginnerYoga = () => {
       name: 'Cat-Cow Pose',
       duration: 60,
       directions: 'Alternate between Cat Pose (arch your back and tuck your chin) and Cow Pose (drop your belly and lift your head). Breathe with each movement.',
-      image: 'https://pocketyoga.com/assets/images/full/Cat.png', // Use Cow Pose as alternate
+      image: 'https://pocketyoga.com/assets/images/full/Cat.png',
     },
     {
       name: 'Downward Dog',
@@ -69,7 +73,7 @@ const BeginnerYoga = () => {
   ];
 
   const calculateFillPercentage = (xp) => {
-    const maxXp = 100; // Example max XP value
+    const maxXp = 100;
     return ((xp % maxXp) / maxXp) * 100;
   };
 
@@ -83,44 +87,38 @@ const BeginnerYoga = () => {
           clearInterval(interval);
           setIsTimerActive(false);
 
-          // Add XP when the timer hits 0
           (async () => {
             try {
-              const addedXp = 20; // XP to add
-              const updatedXp = await addXp(addedXp); // Add XP to the user
-
-              // Show XP bar with animation
+              // add xp each time an activity is completed
+              const addedXp = 20;
+              const updatedXp = await addXp(addedXp);
+              // show xp
               setShowXpBar(true);
-
-              // Animate XP bar width
+              // animate the xp bar
               Animated.timing(xpBarWidth, {
                 toValue: calculateFillPercentage(updatedXp),
-                duration: 1000, // Animation duration
-                useNativeDriver: false, // Width animation requires `false`
+                duration: 1000,
+                useNativeDriver: false,
               }).start();
 
-              // Fade in XP bar and text
               Animated.timing(fadeAnim, {
-                toValue: 1, // Fully visible
-                duration: 500, // Fade-in duration
+                toValue: 1,
+                duration: 500,
                 useNativeDriver: true,
               }).start();
 
-              // Hide XP bar after 5 seconds
               setTimeout(() => {
-                // Fade out XP bar and text
                 Animated.timing(fadeAnim, {
-                  toValue: 0, // Fully invisible
-                  duration: 500, // Fade-out duration
+                  toValue: 0,
+                  duration: 500,
                   useNativeDriver: true,
-                }).start(() => setShowXpBar(false)); // Hide after fade-out
+                }).start(() => setShowXpBar(false));
               }, 5000);
             } catch (error) {
               console.error('Error adding XP:', error);
             }
           })();
 
-          // Move to the next pose
           setCurrentPoseIndex((prevIndex) =>
             prevIndex < poses.length - 1 ? prevIndex + 1 : prevIndex
           );
@@ -181,7 +179,6 @@ const BeginnerYoga = () => {
         </View>
       )}
 
-      {/* XP Bar and Level */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -190,15 +187,13 @@ const BeginnerYoga = () => {
             left: 16,
             right: 16,
             alignItems: 'center',
-            opacity: fadeAnim, // Bind opacity to fadeAnim
+            opacity: fadeAnim,
           }}
         >
-          {/* Level and XP */}
           <Text style={{ fontSize: 16, color: '#fff', marginBottom: 5 }}>
             Level: {calculateLevel(xp)} | XP: {xp}
           </Text>
 
-          {/* XP Bar */}
           <View
             style={{
               height: 20,

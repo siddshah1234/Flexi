@@ -1,17 +1,37 @@
+// this screen runs an emom hiit workout (every minute on the minute)
+// each round is 60 seconds long, and the user does one exercise per round
+// after each round, 30 xp is added and the level bar updates
+// the user can tap the exercise image to see a short description in a popup
+// once all rounds are done, the workout ends with a message
+
 import React, { useState, useRef } from 'react';
 import { View, Text, Image, SafeAreaView, TouchableOpacity, Animated, Modal, StyleSheet } from 'react-native';
 import { useXp } from '../(tabs)/XpContext';
 
 const emomhiit = () => {
+  // track current step
   const [currentStep, setCurrentStep] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(60); // 60 seconds per EMOM round
+
+  // countdown time for each round
+  const [timeRemaining, setTimeRemaining] = useState(60);
+
+  // check if the timer is running
   const [isTimerActive, setIsTimerActive] = useState(false);
+
+  // show xp bar after each round
   const [showXpBar, setShowXpBar] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+
+  // control popup visibility
+  const [showModal, setShowModal] = useState(false);
+
+  // animated progress and fade for xp bar
   const xpBarWidth = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  // get xp functions from context
   const { addXp, xp, calculateLevel } = useXp();
 
+  // list of exercises to do in each round
   const steps = [
     {
       name: 'Burpees',
@@ -70,11 +90,13 @@ const emomhiit = () => {
     },
   ];
 
+  // calculates how full the xp bar should be
   const calculateFillPercentage = (xp) => {
     const maxXp = 100;
     return ((xp % maxXp) / maxXp) * 100;
   };
 
+  // starts the timer and runs the xp logic when time hits 0
   const startTimer = () => {
     setIsTimerActive(true);
     setTimeRemaining(60);
@@ -84,6 +106,7 @@ const emomhiit = () => {
         if (prev <= 1) {
           clearInterval(interval);
 
+          // award xp at end of round
           (async () => {
             try {
               const addedXp = 30;
@@ -114,6 +137,7 @@ const emomhiit = () => {
             }
           })();
 
+          // move to next exercise or end workout
           if (currentStep < steps.length - 1) {
             setCurrentStep((prevIndex) => prevIndex + 1);
             setTimeRemaining(60);
@@ -135,7 +159,7 @@ const emomhiit = () => {
 
       {currentStep < steps.length ? (
         <View style={{ alignItems: 'center' }}>
-          {/* Exercise Image */}
+          {/* show exercise image */}
           <TouchableOpacity onPress={() => setShowModal(true)}>
             <Image
               source={{ uri: steps[currentStep].image }}
@@ -144,12 +168,12 @@ const emomhiit = () => {
             />
           </TouchableOpacity>
 
-          {/* Exercise Name */}
+          {/* show exercise name */}
           <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', marginBottom: 10 }}>
             {steps[currentStep].name}
           </Text>
 
-          {/* Timer */}
+          {/* show timer countdown */}
           {isTimerActive ? (
             <Text style={{ fontSize: 20, color: '#FF6347', marginBottom: 20 }}>
               Time Remaining: {timeRemaining}s
@@ -160,7 +184,7 @@ const emomhiit = () => {
             </Text>
           )}
 
-          {/* Start Button */}
+          {/* start button */}
           {!isTimerActive && (
             <TouchableOpacity
               style={{
@@ -177,6 +201,7 @@ const emomhiit = () => {
           )}
         </View>
       ) : (
+        // end message
         <View style={{ alignItems: 'center' }}>
           <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', textAlign: 'center', marginBottom: 20 }}>
             You Crushed All 15 Rounds! 💥🔥
@@ -184,7 +209,7 @@ const emomhiit = () => {
         </View>
       )}
 
-      {/* XP Bar */}
+      {/* show xp bar */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -223,11 +248,11 @@ const emomhiit = () => {
         </Animated.View>
       )}
 
-      {/* Modal for Exercise Description */}
+      {/* modal for showing exercise description */}
       <Modal
         visible={showModal}
         transparent={true}
-        animationType="fade" // Modal fades in and out
+        animationType="fade"
         onRequestClose={() => setShowModal(false)}
       >
         <View style={styles.modalContainer}>
@@ -247,6 +272,7 @@ const emomhiit = () => {
   );
 };
 
+// styles for modal and buttons
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,

@@ -1,24 +1,31 @@
+// this file sends a message to the openai chatgpt api and returns the response
+// it's used by the ai chatbot in the app to talk with the user
+// it sets a custom instruction (system message) to make chatgpt act like a fitness coach
+// all user messages and past messages are sent along to give context
+// the response is pulled from the api result and returned to the app to be shown
+
 import axios from "axios";
 
 const API_KEY = "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";
 
 export const sendMessageToChatGPT = async (userMessage, previousMessages = []) => {
     try {
-        // Add context message before the user message
+        // tells chatgpt to act like a fitness coach
         const contextMessage = {
             role: "system",
             content: "You are a fitness coach and you need to help the user with their fitness goals. Only provide advice related to fitness and health. If they ask anything else, redirect them to a fitness-related topic.",
         };
 
-        // Combine context and previous messages with the new user message
+        // build the full list of messages to send (context + convo history + new message)
         const messages = [contextMessage, ...previousMessages, { role: "user", content: userMessage }];
 
+        // send the request to openai with gpt-3.5-turbo model
         const response = await axios.post(
             "https://api.openai.com/v1/chat/completions",
             {
-                model: "gpt-3.5-turbo", // Use "gpt-4" if available
+                model: "gpt-3.5-turbo",
                 messages: messages,
-                temperature: 0.7,
+                temperature: 0.7, // adds some randomness to replies
             },
             {
                 headers: {
@@ -28,6 +35,7 @@ export const sendMessageToChatGPT = async (userMessage, previousMessages = []) =
             }
         );
 
+        // get the reply text from the api result
         return response.data.choices[0].message.content;
     } catch (error) {
         console.error("ChatGPT API error:", error);

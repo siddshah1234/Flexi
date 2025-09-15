@@ -1,3 +1,6 @@
+// this file defines a MusicContext provider
+// it manages background music playback and provides control over track selection
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Audio } from 'expo-av';
 

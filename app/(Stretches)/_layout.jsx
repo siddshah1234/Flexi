@@ -2,29 +2,27 @@
 import { Redirect, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
-const workoutsLayout = () => {
+const stretchesLayout = () => {
+
   return (
     <>
       <Stack>
         <Stack.Screen
-          name="AdvancedYoga"
+          name="RunningStretches"
           options={{
             headerShown: false,
-            headerTintColor: "#E55837",
           }}
         />
         <Stack.Screen
-          name="BeginnerYoga"
+          name="WeightliftingStretches"
           options={{
             headerShown: false,
-            headerTintColor: "#E55837",
           }}
         />
         <Stack.Screen
-          name="YogaHomeScreen"
+          name="stretcheshome"
           options={{
             headerShown: false,
-            headerTintColor: "#E55837",
           }}
         />
       </Stack>
@@ -33,4 +31,4 @@ const workoutsLayout = () => {
   );
 };
 
-export default workoutsLayout;
+export default stretchesLayout;

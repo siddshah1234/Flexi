@@ -1,42 +1,50 @@
+// this screen shows 3 resource categories (yoga, outdoor, and home fitness)
+// each category has an image, title, and description and links to another screen
+// when tapped, it takes you to the matching resource page using expo-router
+
 import React from 'react';
 import { View, Text, ImageBackground, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
 const Resources = () => {
+  // this is an array of categories with titles, descriptions, and images
   const categories = [
     {
       id: '1',
       title: 'Yoga and Mindfulness',
       description: 'Explore yoga poses, mindfulness exercises, and meditation resources to relax and rejuvenate.',
-      image: 'https://www.everydayyoga.com/cdn/shop/articles/yoga_1024x1024.jpg?v=1703853908', // Updated image
+      image: 'https://www.everydayyoga.com/cdn/shop/articles/yoga_1024x1024.jpg?v=1703853908',
       navigateTo: 'YogaResources',
     },
     {
       id: '2',
       title: 'Outdoor Activities',
       description: 'Find nearby trails, biking paths, and outdoor adventures to stay active and explore nature.',
-      image: 'https://www.strong4life.com/-/media/Strong4Life/Pages/Activity/Articles/6-Fun-and-Easy-Outdoor-Activities-for-Kids/SLP17_MIX_4y_Family_riding_bikes_0444.jpg', // Updated image
+      image: 'https://www.strong4life.com/-/media/Strong4Life/Pages/Activity/Articles/6-Fun-and-Easy-Outdoor-Activities-for-Kids/SLP17_MIX_4y_Family_riding_bikes_0444.jpg',
       navigateTo: 'OutdoorResources',
     },
     {
       id: '3',
       title: 'Home and Online Fitness',
       description: 'Access workout programs, virtual classes, and fitness challenges for all levels at home.',
-      image: 'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2021/12/457969-MR-MARKET-CLONE-8-of-the-best-online-workout-programs-to-do-at-hom-1296x728-Header-cedd88-1024x574.jpg?w=1155&h=1528', // Updated image
+      image: 'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2021/12/457969-MR-MARKET-CLONE-8-of-the-best-online-workout-programs-to-do-at-hom-1296x728-Header-cedd88-1024x574.jpg?w=1155&h=1528',
       navigateTo: 'HomeResources',
     },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* title and subtitle at the top */}
       <Text style={styles.header}>Fitness Resources</Text>
       <Text style={styles.subHeader}>Choose a category to explore</Text>
+
+      {/* list of category boxes */}
       <View style={styles.categories}>
         {categories.map((category) => (
           <TouchableOpacity
             key={category.id}
             style={styles.categoryBox}
-            onPress={() => router.push(category.navigateTo)}
+            onPress={() => router.push(category.navigateTo)} // go to the matching screen
           >
             <ImageBackground
               source={{ uri: category.image }}
@@ -76,10 +84,10 @@ const styles = StyleSheet.create({
   },
   categories: {
     flex: 1,
-    justifyContent: 'space-around', // Space out the categories evenly
+    justifyContent: 'space-around',
   },
   categoryBox: {
-    height: 180, // Adjusted height to fit without scrolling
+    height: 180,
     borderRadius: 12,
     overflow: 'hidden',
     marginBottom: 20,

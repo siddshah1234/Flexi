@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Flexi",
-    "slug": "Flexi",
+    "slug": "flexi",
     "scheme": "Flexi",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,17 +13,21 @@
       "package": "com.beatityo.flexi",
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs access to your camera.",
-        "NSMicrophoneUsageDescription": "This app needs access to your microphone."
-      }
+        "NSMicrophoneUsageDescription": "This app needs access to your microphone.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.beatityo.flexi"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-        
       },
-      "permissions": ["CAMERA", "RECORD_AUDIO", "INTERNET"]
-      
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "INTERNET"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -44,6 +48,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9a38103b-f794-4e6c-b41f-e551194f36fa"
+      }
+    },
+    "owner": "beatityo"
   }
 }

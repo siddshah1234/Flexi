@@ -1,4 +1,4 @@
-// app/party/_layout.jsx
+// layout for different pages
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 

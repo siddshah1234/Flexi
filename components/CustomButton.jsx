@@ -1,17 +1,20 @@
-import { TouchableOpacity, Text } from 'react-native'
-import React from 'react'
+// this file defines a reusable custom button component
+// it supports dynamic styles, loading state, and click handling
 
-const CustomButton = ( { title, handlePress, containerStyles, textStyles, isLoading }) => {
-    return (
-        <TouchableOpacity
-        onPress={handlePress}
-        activeOpacity={.6}
-        className={`bg-secondary rounded-xl min-h-[62px] justify-center items-center ${containerStyles} ${isLoading ? 'opacity-50' : ''}`}
-        disabled={isLoading}
-        >
-            <Text className={`text-primary font-psemibold text-lg ${textStyles}`}>{title}</Text>
-        </TouchableOpacity>
-    )
-}
+import { TouchableOpacity, Text } from 'react-native';
+import React from 'react';
 
-export default CustomButton
+const CustomButton = ({ title, handlePress, containerStyles, textStyles, isLoading }) => {
+  return (
+    <TouchableOpacity
+      onPress={handlePress}
+      activeOpacity={0.6}
+      className={`bg-secondary rounded-xl min-h-[62px] justify-center items-center ${containerStyles} ${isLoading ? 'opacity-50' : ''}`}
+      disabled={isLoading}
+    >
+      <Text className={`text-primary font-psemibold text-lg ${textStyles}`}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
+
+export default CustomButton;

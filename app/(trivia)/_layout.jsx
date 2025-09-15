@@ -1,3 +1,4 @@
+// layout for different pages
 import { Redirect, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 

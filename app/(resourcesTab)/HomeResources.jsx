@@ -1,7 +1,11 @@
+// this screen shows links to different workout websites and apps
+// each one has a picture and opens the link when tapped
+
 import React from 'react';
 import { View, Text, Image, SafeAreaView, TouchableOpacity, Linking, StyleSheet, ScrollView } from 'react-native';
 
 const HomeResources = () => {
+  // list of all the resources with name, link, and image
   const resources = [
     { title: 'Fitness Blender', url: 'https://www.fitnessblender.com/', image: 'https://media.istockphoto.com/id/578306876/vector/busy-woman-workout-at-home-with-white-chair.jpg?s=612x612&w=0&k=20&c=NEeVqqJwIyThoTjtdUs7NJWiy2iivOPF6Atqvid7p-A=' },
     { title: 'Home Workout', url: 'https://play.google.com/store/apps/details?id=homeworkout.homeworkouts.noequipment&hl=en_US', image: 'https://www.freevector.com/uploads/vector/preview/54726/vecteezynew-yearresolutionillustrationik1021_generated.jpg' },
@@ -13,11 +17,12 @@ const HomeResources = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
+        {/* map through each resource and make a box for it */}
         {resources.map((resource, index) => (
           <TouchableOpacity
             key={index}
             style={styles.resourceBox}
-            onPress={() => Linking.openURL(resource.url)}
+            onPress={() => Linking.openURL(resource.url)} // open the link when tapped
           >
             <Image source={{ uri: resource.image }} style={styles.image} />
             <Text style={styles.resourceTitle}>{resource.title}</Text>
@@ -29,11 +34,33 @@ const HomeResources = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#161622', padding: 16 },
-  header: { fontSize: 24, color: '#fff', fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
-  resourceBox: { marginBottom: 16, alignItems: 'center' },
-  image: { width: '90%', height: 120, borderRadius: 12, marginBottom: 10 }, // Reduced height
-  resourceTitle: { fontSize: 18, color: '#fff', fontWeight: 'bold' },
+  container: {
+    flex: 1,
+    backgroundColor: '#161622',
+    padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    color: '#fff',
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  resourceBox: {
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  image: {
+    width: '90%',
+    height: 120,
+    borderRadius: 12,
+    marginBottom: 10,
+  },
+  resourceTitle: {
+    fontSize: 18,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
 });
 
 export default HomeResources;

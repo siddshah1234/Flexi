@@ -1,3 +1,9 @@
+// this file is for the basic workout screen
+// it includes a timer-based workout with exercises and rest periods
+// users can also play a youtube video for guidance
+// xp is awarded for completing exercises, and progress is shown with an xp bar
+// the screen also includes animations for transitions and modals for exercise details
+
 import React, { useState, useRef } from 'react';
 import {
   View,
@@ -14,21 +20,35 @@ import { WebView } from 'react-native-webview';
 import { useXp } from '../(tabs)/XpContext';
 
 const basic = () => {
+  // state for tracking the current step in the workout
   const [currentStep, setCurrentStep] = useState(0);
+  // state for the timer countdown
   const [timeRemaining, setTimeRemaining] = useState(0);
+  // state to check if the timer is active
   const [isTimerActive, setIsTimerActive] = useState(false);
+  // state for the youtube video url
   const [videoUrl, setVideoUrl] = useState('');
+  // state for the selected youtube video id
   const [selectedVideoId, setSelectedVideoId] = useState(null);
+  // state to toggle visibility of the video input
   const [isHidden, setIsHidden] = useState(false);
+  // state to show the xp bar
   const [showXpBar, setShowXpBar] = useState(false);
+  // state to show the "next" button
   const [showNextButton, setShowNextButton] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State to control the modal visibility
-  const animationValue = useRef(new Animated.Value(1)).current; // Animation value for opacity and height
-  const xpBarWidth = useRef(new Animated.Value(0)).current; // Animated value for XP bar width
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Animated value for XP bar opacity
-  const startButtonOpacity = useRef(new Animated.Value(1)).current; // Animated value for Start button opacity
+  // state to control the visibility of the modal
+  const [showModal, setShowModal] = useState(false);
+
+  // animation values for transitions
+  const animationValue = useRef(new Animated.Value(1)).current;
+  const xpBarWidth = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const startButtonOpacity = useRef(new Animated.Value(1)).current;
+
+  // xp context for managing xp and levels
   const { addXp, xp, calculateLevel } = useXp();
 
+  // list of workout steps with exercises and rest periods
   const steps = [
     {
       name: 'Mountain Climbers',
@@ -80,26 +100,30 @@ const basic = () => {
     },
   ];
 
+  // function to extract the video id from a youtube url
   const extractVideoId = (url) => {
     const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = url.match(regex);
     return match ? match[1] : null;
   };
 
+  // function to handle youtube video submission
   const handleVideoSubmit = () => {
     const videoId = extractVideoId(videoUrl);
     if (videoId) {
       setSelectedVideoId(videoId);
     } else {
-      alert('Invalid YouTube URL. Please try again.');
+      alert('invalid youtube url. please try again.');
     }
   };
 
+  // function to clear the video url and id
   const clearVideo = () => {
     setVideoUrl('');
     setSelectedVideoId(null);
   };
 
+  // function to toggle the visibility of the video input
   const toggleHide = () => {
     Animated.timing(animationValue, {
       toValue: isHidden ? 1 : 0, // 1 for visible, 0 for hidden
@@ -110,6 +134,7 @@ const basic = () => {
     });
   };
 
+  // function to start the timer for the current step
   const startTimer = () => {
     setIsTimerActive(true);
     setTimeRemaining(steps[currentStep].duration);
@@ -119,57 +144,57 @@ const basic = () => {
         if (prev <= 1) {
           clearInterval(interval);
 
-          // Award XP only on exercises, not rest
+          // award xp only on exercises, not rest
           if (steps[currentStep].name !== 'Rest') {
-            const xpToAdd = 7; // XP to add for each exercise
+            const xpToAdd = 7; // xp to add for each exercise
             addXp(xpToAdd);
 
-            // Fade out Start button
+            // fade out start button
             Animated.timing(startButtonOpacity, {
-              toValue: 0, // Fully invisible
-              duration: 500, // Fade-out duration
+              toValue: 0, // fully invisible
+              duration: 500, // fade-out duration
               useNativeDriver: true,
             }).start();
 
-            // Show XP bar with animation
+            // show xp bar with animation
             setShowXpBar(true);
 
-            // Animate XP bar width
+            // animate xp bar width
             Animated.timing(xpBarWidth, {
               toValue: calculateFillPercentage(xp + xpToAdd),
-              duration: 1000, // Animation duration
-              useNativeDriver: false, // Width animation requires `false`
+              duration: 1000, // animation duration
+              useNativeDriver: false, // width animation requires `false`
             }).start();
 
-            // Fade in XP bar and text
+            // fade in xp bar and text
             Animated.timing(fadeAnim, {
-              toValue: 1, // Fully visible
-              duration: 500, // Fade-in duration
+              toValue: 1, // fully visible
+              duration: 500, // fade-in duration
               useNativeDriver: true,
             }).start();
 
-            // Hide XP bar after 5 seconds
+            // hide xp bar after 5 seconds
             setTimeout(() => {
-              // Fade out XP bar and text
+              // fade out xp bar and text
               Animated.timing(fadeAnim, {
-                toValue: 0, // Fully invisible
-                duration: 500, // Fade-out duration
+                toValue: 0, // fully invisible
+                duration: 500, // fade-out duration
                 useNativeDriver: true,
               }).start(() => {
-                setShowXpBar(false); // Hide after fade-out
+                setShowXpBar(false); // hide after fade-out
 
-                // Fade in Start button
+                // fade in start button
                 Animated.timing(startButtonOpacity, {
-                  toValue: 1, // Fully visible
-                  duration: 500, // Fade-in duration
+                  toValue: 1, // fully visible
+                  duration: 500, // fade-in duration
                   useNativeDriver: true,
                 }).start();
 
-                setShowNextButton(true); // Show "Next" button
+                setShowNextButton(true); // show "next" button
               });
             }, 5000);
           } else {
-            setShowNextButton(true); // Show "Next" button immediately for rest steps
+            setShowNextButton(true); // show "next" button immediately for rest steps
           }
 
           setIsTimerActive(false);
@@ -179,34 +204,25 @@ const basic = () => {
     }, 1000);
   };
 
+  // function to calculate the xp bar fill percentage
   const calculateFillPercentage = (xp) => {
-    const maxXp = 100; // Example max XP value
+    const maxXp = 100; // example max xp value
     return ((xp % maxXp) / maxXp) * 100;
   };
 
+  // function to handle moving to the next step
   const handleNext = () => {
-    // Move to the next step
-    setCurrentStep((prev) => (prev + 1) % steps.length);
-
-    // Reset the timer
-    const nextStepDuration = steps[(currentStep + 1) % steps.length].duration;
-    setTimeRemaining(nextStepDuration);
-
-    // Hide the "Next" button
-    setShowNextButton(false);
-
-    // Automatically start the timer for the next step
-    setIsTimerActive(true);
-
-    // Start the timer for the next step
-    startTimer();
+    setCurrentStep((prev) => (prev + 1) % steps.length); // move to the next step
+    setTimeRemaining(steps[(currentStep + 1) % steps.length].duration); // reset the timer
+    setShowNextButton(false); // hide the "next" button
+    startTimer(); // start the timer for the next step
   };
 
-  const { level } = calculateLevel(xp); // Calculate level for the XP bar
+  const { level } = calculateLevel(xp); // calculate level for the xp bar
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Modal for Exercise Description */}
+      {/* modal for exercise description */}
       <Modal
         visible={showModal}
         transparent={true}
@@ -234,7 +250,7 @@ const basic = () => {
         </View>
       </Modal>
 
-      {/* YouTube URL Input and Buttons */}
+      {/* youtube url input and buttons */}
       <Animated.View
         style={[
           styles.inputContainer,
@@ -242,7 +258,7 @@ const basic = () => {
             opacity: animationValue,
             height: animationValue.interpolate({
               inputRange: [0, 1],
-              outputRange: [0, 60], // Adjust height for hiding
+              outputRange: [0, 60], // adjust height for hiding
             }),
           },
         ]}
@@ -250,7 +266,7 @@ const basic = () => {
         <TextInput
           style={styles.input}
           placeholder="Paste YouTube URL"
-          placeholderTextColor="#000" // Set placeholder text color to black
+          placeholderTextColor="#000"
           value={videoUrl}
           onChangeText={setVideoUrl}
           onSubmitEditing={handleVideoSubmit}
@@ -265,7 +281,7 @@ const basic = () => {
         </TouchableOpacity>
       </Animated.View>
 
-      {/* YouTube Video Player */}
+      {/* youtube video player */}
       {selectedVideoId && (
         <Animated.View
           style={[
@@ -274,7 +290,7 @@ const basic = () => {
               opacity: animationValue,
               height: animationValue.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, 200], // Adjust height for hiding
+                outputRange: [0, 200], // adjust height for hiding
               }),
             },
           ]}
@@ -282,14 +298,14 @@ const basic = () => {
           <WebView
             source={{ uri: `https://www.youtube.com/embed/${selectedVideoId}?playsinline=1` }}
             style={styles.webView}
-            allowsFullscreenVideo={false} // Prevent fullscreen
-            mediaPlaybackRequiresUserAction={false} // Prevent autoplay
-            allowsInlineMediaPlayback={true} // Allow inline playback
+            allowsFullscreenVideo={false}
+            mediaPlaybackRequiresUserAction={false}
+            allowsInlineMediaPlayback={true}
           />
         </Animated.View>
       )}
 
-      {/* Hide/Show Button */}
+      {/* hide/show button */}
       <TouchableOpacity
         style={[styles.toggleButton, { marginTop: selectedVideoId ? 10 : 20 }]}
         onPress={toggleHide}
@@ -299,7 +315,7 @@ const basic = () => {
         </Text>
       </TouchableOpacity>
 
-      {/* Exercise Section */}
+      {/* exercise section */}
       <View style={styles.exerciseContainer}>
         {currentStep < steps.length ? (
           <>
@@ -339,7 +355,7 @@ const basic = () => {
         )}
       </View>
 
-      {/* XP Bar and Level */}
+      {/* xp bar and level */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -348,15 +364,12 @@ const basic = () => {
             left: 16,
             right: 16,
             alignItems: 'center',
-            opacity: fadeAnim, // Bind opacity to fadeAnim
+            opacity: fadeAnim,
           }}
         >
-          {/* Level and XP */}
           <Text style={{ fontSize: 16, color: '#fff', marginBottom: 5 }}>
             Level: {calculateLevel(xp)} | XP: {xp}
           </Text>
-
-          {/* XP Bar */}
           <View
             style={{
               height: 20,
@@ -393,7 +406,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    overflow: 'hidden', // Ensure hidden elements are clipped
+    overflow: 'hidden',
   },
   input: {
     flex: 1,
@@ -437,7 +450,7 @@ const styles = StyleSheet.create({
   },
   videoContainer: {
     marginBottom: 10,
-    overflow: 'hidden', // Ensure hidden elements are clipped
+    overflow: 'hidden',
   },
   webView: {
     flex: 1,

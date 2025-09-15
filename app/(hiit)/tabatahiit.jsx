@@ -1,3 +1,9 @@
+// this screen runs a tabata-style hiit workout
+// each round is 20 seconds of work followed by 10 seconds rest
+// user earns xp for every workout step (not rest)
+// xp bar appears after workout steps and fades out after a few seconds
+// users can tap exercise images to see a short description
+
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
@@ -13,15 +19,29 @@ import { Audio } from 'expo-av';
 import { useXp } from '../(tabs)/XpContext';
 
 const tabatahiit = () => {
+  // current step in the workout
   const [currentStep, setCurrentStep] = useState(0);
+
+  // countdown timer
   const [timeRemaining, setTimeRemaining] = useState(0);
+
+  // is the timer running?
   const [isTimerActive, setIsTimerActive] = useState(false);
+
+  // should the xp bar show?
   const [showXpBar, setShowXpBar] = useState(false);
+
+  // is the description modal open?
   const [showModal, setShowModal] = useState(false);
+
+  // xp animation and fade values
   const xpBarWidth = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  // grab xp info from context
   const { addXp, xp, calculateLevel } = useXp();
 
+  // all workout steps
   const steps = [
     {
       name: 'Jumping Jacks',
@@ -55,11 +75,13 @@ const tabatahiit = () => {
     },
   ];
 
+  // figure out xp fill percentage
   const calculateFillPercentage = (xp) => {
     const maxXp = 100;
     return ((xp % maxXp) / maxXp) * 100;
   };
 
+  // start the timer and handle xp logic
   const startTimer = () => {
     setIsTimerActive(true);
     setTimeRemaining(steps[currentStep].duration);
@@ -69,6 +91,7 @@ const tabatahiit = () => {
         if (prev <= 1) {
           clearInterval(interval);
 
+          // only award xp if not a rest step
           if (steps[currentStep].name !== 'Rest') {
             (async () => {
               try {
@@ -101,6 +124,7 @@ const tabatahiit = () => {
             })();
           }
 
+          // move to next step or end
           if (currentStep < steps.length - 1) {
             setCurrentStep((prevIndex) => prevIndex + 1);
             setTimeRemaining(steps[currentStep + 1].duration);
@@ -116,12 +140,14 @@ const tabatahiit = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#161622', padding: 16 }}>
+      {/* title */}
       <Text style={{ fontSize: 28, color: '#fff', fontWeight: 'bold', textAlign: 'center', marginBottom: 20 }}>
         Tabata HIIT
       </Text>
 
       {currentStep < steps.length ? (
         <View style={{ alignItems: 'center' }}>
+          {/* tap image to open modal */}
           <TouchableOpacity onPress={() => setShowModal(true)}>
             <Image
               source={{ uri: steps[currentStep].image }}
@@ -130,20 +156,23 @@ const tabatahiit = () => {
             />
           </TouchableOpacity>
 
+          {/* exercise name */}
           <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', marginBottom: 10 }}>
             {steps[currentStep].name}
           </Text>
 
+          {/* countdown or start message */}
           {isTimerActive ? (
             <Text style={{ fontSize: 20, color: '#FF6347', marginBottom: 20 }}>
               Time Remaining: {timeRemaining}s
             </Text>
           ) : (
             <Text style={{ fontSize: 20, color: '#aaa', marginBottom: 20 }}>
-              Ready? Press Start to Begin
+              ready? press start to begin
             </Text>
           )}
 
+          {/* start button */}
           {!isTimerActive && (
             <TouchableOpacity
               style={{
@@ -160,13 +189,15 @@ const tabatahiit = () => {
           )}
         </View>
       ) : (
+        // workout complete message
         <View style={{ alignItems: 'center' }}>
           <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', textAlign: 'center', marginBottom: 20 }}>
-            Great Job! You Finished the Workout 🎉
+            great job! you finished the workout 🎉
           </Text>
         </View>
       )}
 
+      {/* xp bar with animation */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -205,6 +236,7 @@ const tabatahiit = () => {
         </Animated.View>
       )}
 
+      {/* modal for exercise info */}
       <Modal
         visible={showModal}
         transparent={true}
@@ -228,6 +260,7 @@ const tabatahiit = () => {
   );
 };
 
+// styles for modal and button
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,

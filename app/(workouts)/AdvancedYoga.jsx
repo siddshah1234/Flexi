@@ -1,3 +1,7 @@
+// this file defines the Advanced Yoga screen
+// it guides users through advanced yoga poses with timers and XP rewards
+// users earn XP for completing poses, and progress is visualized with an animated XP bar
+
 import React, { useState, useRef } from 'react';
 import { View, Text, Image, SafeAreaView, TouchableOpacity, Animated } from 'react-native';
 import { useXp } from '../(tabs)/XpContext';
@@ -7,9 +11,9 @@ const AdvancedYoga = () => {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [showXpBar, setShowXpBar] = useState(false);
-  const xpBarWidth = useRef(new Animated.Value(0)).current; // Animated value for XP bar width
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Animated value for opacity
-  const { addXp, xp, calculateLevel } = useXp(); // Access XP state, addXp function, and calculateLevel from context
+  const xpBarWidth = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const { addXp, xp, calculateLevel } = useXp();
 
   const poses = [
     {
@@ -69,7 +73,7 @@ const AdvancedYoga = () => {
   ];
 
   const calculateFillPercentage = (xp) => {
-    const maxXp = 100; // Example max XP value
+    const maxXp = 100;
     return ((xp % maxXp) / maxXp) * 100;
   };
 
@@ -83,44 +87,37 @@ const AdvancedYoga = () => {
           clearInterval(interval);
           setIsTimerActive(false);
 
-          // Add XP when the timer hits 0
           (async () => {
             try {
-              const addedXp = 35; // XP to add
-              const updatedXp = await addXp(addedXp); // Add XP to the user
+              const addedXp = 35;
+              const updatedXp = await addXp(addedXp);
 
-              // Show XP bar with animation
               setShowXpBar(true);
 
-              // Animate XP bar width
               Animated.timing(xpBarWidth, {
                 toValue: calculateFillPercentage(updatedXp),
-                duration: 1000, // Animation duration
-                useNativeDriver: false, // Width animation requires `false`
+                duration: 1000,
+                useNativeDriver: false,
               }).start();
 
-              // Fade in XP bar and text
               Animated.timing(fadeAnim, {
-                toValue: 1, // Fully visible
-                duration: 500, // Fade-in duration
+                toValue: 1,
+                duration: 500,
                 useNativeDriver: true,
               }).start();
 
-              // Hide XP bar after 5 seconds
               setTimeout(() => {
-                // Fade out XP bar and text
                 Animated.timing(fadeAnim, {
-                  toValue: 0, // Fully invisible
-                  duration: 500, // Fade-out duration
+                  toValue: 0,
+                  duration: 500,
                   useNativeDriver: true,
-                }).start(() => setShowXpBar(false)); // Hide after fade-out
+                }).start(() => setShowXpBar(false));
               }, 5000);
             } catch (error) {
               console.error('Error adding XP:', error);
             }
           })();
 
-          // Move to the next pose
           setCurrentPoseIndex((prevIndex) =>
             prevIndex < poses.length - 1 ? prevIndex + 1 : prevIndex
           );
@@ -181,7 +178,6 @@ const AdvancedYoga = () => {
         </View>
       )}
 
-      {/* XP Bar and Level */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -190,15 +186,13 @@ const AdvancedYoga = () => {
             left: 16,
             right: 16,
             alignItems: 'center',
-            opacity: fadeAnim, // Bind opacity to fadeAnim
+            opacity: fadeAnim,
           }}
         >
-          {/* Level and XP */}
           <Text style={{ fontSize: 16, color: '#fff', marginBottom: 5 }}>
             Level: {calculateLevel(xp)} | XP: {xp}
           </Text>
 
-          {/* XP Bar */}
           <View
             style={{
               height: 20,

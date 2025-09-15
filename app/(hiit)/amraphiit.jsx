@@ -1,3 +1,10 @@
+// this screen runs a 15 minute amrap workout
+// amrap = as many rounds as possible
+// user cycles through 5 exercises over and over until timer ends
+// each full round gives 30 xp
+// xp bar shows after each round and then fades away
+// tapping the image shows a description of the exercise
+
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Image, SafeAreaView, TouchableOpacity, Animated, Modal, StyleSheet } from 'react-native';
 import { useXp } from '../(tabs)/XpContext';
@@ -8,44 +15,51 @@ const amraphiit = () => {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [showXpBar, setShowXpBar] = useState(false);
   const [isRoundDone, setIsRoundDone] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+  const [showModal, setShowModal] = useState(false);
+
+  // xp bar animation values
   const xpBarWidth = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  // xp functions from context
   const { addXp, xp, calculateLevel } = useXp();
 
+  // exercises for the circuit
   const exercises = [
     {
       name: 'Jump Squats (x10)',
       image: 'https://www.spotebi.com/wp-content/uploads/2015/08/jump-squat-exercise-illustration.gif',
-      description: 'Start in a squat position, jump explosively, and land softly back into a squat. Repeat for 10 reps.',
+      description: 'start in a squat position, jump explosively, and land softly back into a squat. repeat for 10 reps.',
     },
     {
       name: 'Push-Ups (x10)',
       image: 'https://www.spotebi.com/wp-content/uploads/2014/10/push-up-exercise-illustration.gif',
-      description: 'Lower your body until your chest nearly touches the floor. Push back up while keeping your body straight. Perform 10 reps.',
+      description: 'lower your body until your chest nearly touches the floor. push back up while keeping your body straight. perform 10 reps.',
     },
     {
       name: 'Mountain Climbers (x20)',
       image: 'https://www.spotebi.com/wp-content/uploads/2014/10/mountain-climbers-exercise-illustration-spotebi.gif',
-      description: 'Start in a plank position and alternate bringing your knees toward your chest. Perform 20 reps.',
+      description: 'start in a plank position and alternate bringing your knees toward your chest. perform 20 reps.',
     },
     {
       name: 'V-Ups (x10)',
       image: 'https://www.spotebi.com/wp-content/uploads/2015/05/v-ups-exercise-illustration.gif',
-      description: 'Lie on your back, lift your legs and upper body simultaneously, and reach for your toes. Perform 10 reps.',
+      description: 'lie on your back, lift your legs and upper body together, and reach for your toes. perform 10 reps.',
     },
     {
       name: 'Plank Hold (30s)',
       image: 'https://www.spotebi.com/wp-content/uploads/2014/10/plank-exercise-illustration.gif',
-      description: 'Hold a plank position with your body straight and your core engaged for 30 seconds.',
+      description: 'hold a plank position with your body straight and your core tight for 30 seconds.',
     },
   ];
 
+  // figure out xp bar percent
   const calculateFillPercentage = (xp) => {
     const maxXp = 100;
     return ((xp % maxXp) / maxXp) * 100;
   };
 
+  // give xp and animate bar
   const awardXp = async () => {
     try {
       const addedXp = 30;
@@ -76,6 +90,7 @@ const amraphiit = () => {
     }
   };
 
+  // go to next exercise or finish round
   const nextExercise = () => {
     if (currentStep < exercises.length - 1) {
       setCurrentStep((prev) => prev + 1);
@@ -85,16 +100,19 @@ const amraphiit = () => {
     }
   };
 
+  // reset to first exercise and keep going
   const keepGoing = () => {
     setCurrentStep(0);
     setIsRoundDone(false);
   };
 
+  // stop the workout
   const endCircuit = () => {
     setAmrapTime(0);
     setIsTimerActive(false);
   };
 
+  // countdown timer for amrap
   useEffect(() => {
     if (isTimerActive && amrapTime > 0) {
       const timer = setInterval(() => {
@@ -104,6 +122,7 @@ const amraphiit = () => {
     }
   }, [isTimerActive, amrapTime]);
 
+  // convert time to mm:ss
   const formatTime = (sec) => {
     const m = Math.floor(sec / 60);
     const s = sec % 60;
@@ -112,19 +131,21 @@ const amraphiit = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#161622', padding: 16 }}>
+      {/* title */}
       <Text style={{ fontSize: 28, color: '#fff', fontWeight: 'bold', textAlign: 'center', marginBottom: 20 }}>
         AMRAP HIIT (15 Min)
       </Text>
 
       {amrapTime > 0 ? (
         <View style={{ alignItems: 'center' }}>
+          {/* timer */}
           <Text style={{ fontSize: 20, color: '#fff', marginBottom: 10 }}>
             Time Left: {formatTime(amrapTime)}
           </Text>
 
           {!isRoundDone ? (
             <>
-              {/* Exercise Image */}
+              {/* exercise image */}
               <TouchableOpacity onPress={() => setShowModal(true)}>
                 <Image
                   source={{ uri: exercises[currentStep].image }}
@@ -133,11 +154,12 @@ const amraphiit = () => {
                 />
               </TouchableOpacity>
 
-              {/* Exercise Name */}
+              {/* exercise name */}
               <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', marginBottom: 10 }}>
                 {exercises[currentStep].name}
               </Text>
 
+              {/* start or next button */}
               {!isTimerActive ? (
                 <TouchableOpacity
                   style={{
@@ -170,6 +192,7 @@ const amraphiit = () => {
             </>
           ) : (
             <>
+              {/* round done actions */}
               <Text style={{ fontSize: 22, color: '#fff', fontWeight: 'bold', marginBottom: 20 }}>
                 Round Complete!
               </Text>
@@ -203,6 +226,7 @@ const amraphiit = () => {
           )}
         </View>
       ) : (
+        // workout complete message
         <View style={{ alignItems: 'center' }}>
           <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', textAlign: 'center', marginBottom: 20 }}>
             You Crushed the AMRAP! 💥🔥
@@ -210,7 +234,7 @@ const amraphiit = () => {
         </View>
       )}
 
-      {/* XP Bar */}
+      {/* xp bar */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -249,11 +273,11 @@ const amraphiit = () => {
         </Animated.View>
       )}
 
-      {/* Modal for Exercise Description */}
+      {/* exercise description modal */}
       <Modal
         visible={showModal}
         transparent={true}
-        animationType="fade" // Modal fades in and out
+        animationType="fade"
         onRequestClose={() => setShowModal(false)}
       >
         <View style={styles.modalContainer}>
@@ -273,6 +297,7 @@ const amraphiit = () => {
   );
 };
 
+// modal styles
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,

@@ -1,17 +1,38 @@
+// this screen runs a ladder-style hiit workout
+// exercises get longer, then shorter again (like a ladder)
+// user does 3 different moves with breaks in between
+// after each work step (not rest), user earns 20 xp
+// xp bar shows progress and fades out after a few seconds
+// user can tap on the exercise image to see instructions
+
 import React, { useState, useRef } from 'react';
 import { View, Text, Image, SafeAreaView, TouchableOpacity, Animated, Modal, StyleSheet } from 'react-native';
 import { useXp } from '../(tabs)/XpContext';
 
 const ladderhiit = () => {
+  // keep track of what step the user is on
   const [currentStep, setCurrentStep] = useState(0);
+
+  // timer for each round
   const [timeRemaining, setTimeRemaining] = useState(0);
+
+  // is the timer running?
   const [isTimerActive, setIsTimerActive] = useState(false);
+
+  // show xp bar when a step is complete
   const [showXpBar, setShowXpBar] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+
+  // control if the exercise description is showing
+  const [showModal, setShowModal] = useState(false);
+
+  // xp bar and fade animation values
   const xpBarWidth = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  // get xp functions from context
   const { addXp, xp, calculateLevel } = useXp();
 
+  // list of exercises
   const EXERCISES = [
     {
       name: 'Jump Squats',
@@ -30,11 +51,14 @@ const ladderhiit = () => {
     },
   ];
 
+  // rest image
   const REST_IMAGE = 'https://www.shutterstock.com/image-vector/woman-tired-resting-sit-after-260nw-2255199041.jpg';
 
-  const repDurations = [15, 25, 35, 45, 35, 25, 15]; // Approx. times in seconds for each ladder level
-  const steps = [];
+  // time (in seconds) for each rep level
+  const repDurations = [15, 25, 35, 45, 35, 25, 15];
 
+  // generate all steps (each move + rest)
+  const steps = [];
   repDurations.forEach((duration) => {
     EXERCISES.forEach((ex) => {
       steps.push({ name: ex.name, duration: duration, image: ex.image, description: ex.description });
@@ -42,11 +66,13 @@ const ladderhiit = () => {
     steps.push({ name: 'Rest', duration: 30, image: REST_IMAGE, description: 'Take a short break to recover before the next set.' });
   });
 
+  // figure out what percent of xp bar to fill
   const calculateFillPercentage = (xp) => {
     const maxXp = 100;
     return ((xp % maxXp) / maxXp) * 100;
   };
 
+  // start the timer for the current step
   const startTimer = () => {
     setIsTimerActive(true);
     setTimeRemaining(steps[currentStep].duration);
@@ -56,6 +82,7 @@ const ladderhiit = () => {
         if (prev <= 1) {
           clearInterval(interval);
 
+          // only give xp if it’s not a rest step
           if (steps[currentStep].name !== 'Rest') {
             (async () => {
               try {
@@ -88,6 +115,7 @@ const ladderhiit = () => {
             })();
           }
 
+          // move to the next step or end the workout
           if (currentStep < steps.length - 1) {
             setCurrentStep((prevIndex) => prevIndex + 1);
             setTimeRemaining(steps[currentStep + 1].duration);
@@ -103,13 +131,14 @@ const ladderhiit = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#161622', padding: 16 }}>
+      {/* screen title */}
       <Text style={{ fontSize: 28, color: '#fff', fontWeight: 'bold', textAlign: 'center', marginBottom: 20 }}>
         Ladder HIIT
       </Text>
 
       {currentStep < steps.length ? (
         <View style={{ alignItems: 'center' }}>
-          {/* Exercise Image */}
+          {/* exercise image (tap to see description) */}
           <TouchableOpacity onPress={() => setShowModal(true)}>
             <Image
               source={{ uri: steps[currentStep].image }}
@@ -118,23 +147,23 @@ const ladderhiit = () => {
             />
           </TouchableOpacity>
 
-          {/* Exercise Name */}
+          {/* exercise name */}
           <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', marginBottom: 10 }}>
             {steps[currentStep].name}
           </Text>
 
-          {/* Timer */}
+          {/* timer or message */}
           {isTimerActive ? (
             <Text style={{ fontSize: 20, color: '#FF6347', marginBottom: 20 }}>
               Time Remaining: {timeRemaining}s
             </Text>
           ) : (
             <Text style={{ fontSize: 20, color: '#aaa', marginBottom: 20 }}>
-              Ready? Press Start to Begin
+              ready? press start to begin
             </Text>
           )}
 
-          {/* Start Button */}
+          {/* start button */}
           {!isTimerActive && (
             <TouchableOpacity
               style={{
@@ -151,14 +180,15 @@ const ladderhiit = () => {
           )}
         </View>
       ) : (
+        // end screen message
         <View style={{ alignItems: 'center' }}>
           <Text style={{ fontSize: 24, color: '#fff', fontWeight: 'bold', textAlign: 'center', marginBottom: 20 }}>
-            Awesome Work! You Crushed the Ladder 💪🔥
+            awesome work! you crushed the ladder 💪🔥
           </Text>
         </View>
       )}
 
-      {/* XP Bar */}
+      {/* xp bar */}
       {showXpBar && (
         <Animated.View
           style={{
@@ -197,11 +227,11 @@ const ladderhiit = () => {
         </Animated.View>
       )}
 
-      {/* Modal for Exercise Description */}
+      {/* modal for showing step description */}
       <Modal
         visible={showModal}
         transparent={true}
-        animationType="fade" // Modal fades in and out
+        animationType="fade"
         onRequestClose={() => setShowModal(false)}
       >
         <View style={styles.modalContainer}>
@@ -221,6 +251,7 @@ const ladderhiit = () => {
   );
 };
 
+// modal styles
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,

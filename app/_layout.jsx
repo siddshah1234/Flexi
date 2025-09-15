@@ -1,3 +1,4 @@
+// layout for different pages
 import { StyleSheet, Text, View } from 'react-native'
 import { useEffect } from "react";
 import { SplashScreen, Stack } from 'expo-router';
@@ -7,6 +8,21 @@ import "../global.css";
 
 import GlobalProvider from '../context/globalprovider';
 import { MusicProvider } from '../context/MusicContext';
+
+import { LogBox } from 'react-native';
+
+// Ignore specific warnings
+LogBox.ignoreLogs([
+  '[expo-av]: Expo AV has been deprecated',
+  'Route "./(tabs)/XpContext.jsx" is missing the required default export',
+  'Route "./(tabs)/chatgptServices.jsx" is missing the required default export',
+  'No route named "(running2)" exists in nested children',
+  'AppwriteException: User (role: guests) missing scope (account)',
+  'Error fetching user data: [Error: AppwriteException: User (role: guests) missing scope (account)]'
+]);
+
+// Ignore all logs (not recommended for production)
+LogBox.ignoreAllLogs(true);
 
 SplashScreen.preventAutoHideAsync()
 
@@ -41,22 +57,22 @@ const RootLayout = () => {
 
   return (
     <MusicProvider>
-    <XpProvider>
-      <GlobalProvider>
-        <Stack options={{ headerShown: false }}>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(workouts)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
-          <Stack.Screen name="(Stretches)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
-          <Stack.Screen name="(hiit)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
-          <Stack.Screen name="(trivia)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
-          <Stack.Screen name="(resourcesTab)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "Resources", headerTitleStyle: { color: 'white', fontSize: 25 }, headerTintColor: "#E55837" }} />
-          <Stack.Screen name="(running2)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "" }} />
-          <Stack.Screen name="(party)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
-        </Stack>
-      </GlobalProvider>
-    </XpProvider>
+      <XpProvider>
+        <GlobalProvider>
+          <Stack options={{ headerShown: false }}>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(workouts)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
+            <Stack.Screen name="(Stretches)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
+            <Stack.Screen name="(hiit)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
+            <Stack.Screen name="(trivia)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
+            <Stack.Screen name="(resourcesTab)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "Resources", headerTitleStyle: { color: 'white', fontSize: 25 }, headerTintColor: "#E55837" }} />
+            <Stack.Screen name="(running2)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "" }} />
+            <Stack.Screen name="(party)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
+          </Stack>
+        </GlobalProvider>
+      </XpProvider>
     </MusicProvider>
   )
 }
