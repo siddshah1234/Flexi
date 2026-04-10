@@ -6,7 +6,7 @@
 
 import axios from "axios";
 
-const API_KEY = "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";
+const API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
 
 export const sendMessageToChatGPT = async (userMessage, previousMessages = []) => {
     try {

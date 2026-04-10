@@ -22,6 +22,7 @@ const TabsLayout = () => {
         <>
             <Tabs
                 screenOptions={{
+                    tabBarHideOnKeyboard: true,
                     tabBarActiveTintColor: '#E55837',
                     tabBarInactiveTintColor: '#cdcde0',
                     tabBarStyle: {
@@ -31,6 +32,8 @@ const TabsLayout = () => {
                         height: 84,
                     }
                 }}>
+                <Tabs.Screen name="XpContext" options={{ href: null }} />
+                <Tabs.Screen name="chatgptServices" options={{ href: null }} />
                 <Tabs.Screen
                     name="exercise"
                     options={{
@@ -91,6 +94,8 @@ const TabsLayout = () => {
                         ),
                     }}
                 />
+                <Tabs.Screen name="leaderboard" options={{ href: null }} />
+                <Tabs.Screen name="challenges" options={{ href: null }} />
                 <Tabs.Screen
                     name="logout"
                     options={{

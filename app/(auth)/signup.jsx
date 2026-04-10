@@ -3,17 +3,26 @@
 // if the account is made successfully, it saves the user info and sends them to the exercise screen
 // if there’s a problem, it shows an error message
 
-import { View, Text, ScrollView, Alert, Image } from 'react-native'
+import { View, Text, ScrollView, Alert, Image, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
 import FormField from '../../components/FormField'
 import CustomButton from '../../components/CustomButton'
 import { Link, router } from 'expo-router'
-import { createUser } from '../../lib/appwrite'
+import { createUser, getAccount } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/globalprovider'
-import { Account } from 'react-native-appwrite'
 import { useFocusEffect } from '@react-navigation/native'
+
+const adjectives = ['Swift', 'Iron', 'Zen', 'Fierce', 'Bold', 'Apex', 'Elite', 'Turbo', 'Hyper', 'Blaze', 'Rogue', 'Ultra'];
+const nouns = ['Runner', 'Lifter', 'Yogi', 'Beast', 'Warrior', 'Titan', 'Flex', 'Pulse', 'Grind', 'Surge', 'Spark', 'Force'];
+
+const generateUsername = () => {
+  const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+  const num = Math.floor(Math.random() * 900) + 100;
+  return `${adj}${noun}${num}`;
+};
 
 const SignUp = () => {
   // get global functions to store user info
@@ -34,7 +43,7 @@ const SignUp = () => {
       // Try to fetch the current user when the screen is focused
       const fetchUser = async () => {
         try {
-          const user = await account.get();
+          const user = await getAccount();
           setUser(user);
           setIsLogged(true);
         } catch {
@@ -97,6 +106,14 @@ const SignUp = () => {
             handleChangeText={(e) => setForm({ ...form, username: e })}
             otherStyles="mt-10"
           />
+          <TouchableOpacity
+            onPress={() => setForm({ ...form, username: generateUsername() })}
+            className="mt-2 self-end"
+          >
+            <Text className="text-sm font-pregular" style={{ color: '#E55837' }}>
+              🎲 Generate random username
+            </Text>
+          </TouchableOpacity>
 
           {/* email input */}
           <FormField

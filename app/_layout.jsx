@@ -21,8 +21,6 @@ LogBox.ignoreLogs([
   'Error fetching user data: [Error: AppwriteException: User (role: guests) missing scope (account)]'
 ]);
 
-// Ignore all logs (not recommended for production)
-LogBox.ignoreAllLogs(true);
 
 SplashScreen.preventAutoHideAsync()
 
@@ -68,7 +66,6 @@ const RootLayout = () => {
             <Stack.Screen name="(hiit)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
             <Stack.Screen name="(trivia)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
             <Stack.Screen name="(resourcesTab)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "Resources", headerTitleStyle: { color: 'white', fontSize: 25 }, headerTintColor: "#E55837" }} />
-            <Stack.Screen name="(running2)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "" }} />
             <Stack.Screen name="(party)" options={{ headerShown: true, headerBackTitle: "Back", headerTransparent: true, headerTitle: "", headerTintColor: "#E55837" }} />
           </Stack>
         </GlobalProvider>

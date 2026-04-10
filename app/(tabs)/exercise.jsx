@@ -10,13 +10,13 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../../constants';
 import Quote from '../../components/Quote';
-import { getAccount, getCurrentUser, updateUser } from '../../lib/appwrite';
+import { getAccount, getCurrentUser, updateUser, getLeaderboard } from '../../lib/appwrite';
+import { getTodaysChallenges } from '../../constants/challenges';
 import { useNavigation } from '@react-navigation/native';
 import { Redirect, router } from "expo-router";
 import { useXp } from '../(tabs)/XpContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { useMusic } from '../../context/MusicContext';
-import { shuffle } from 'lodash';
 
 const exercise = () => {
   const [refreshing, setRefreshing] = useState(false); // refresh control state
@@ -24,7 +24,10 @@ const exercise = () => {
   const { addXp, xp } = useXp(); // xp context
   const navigation = useNavigation();
   const { selectedTrack, setSelectedTrack } = useMusic(); // stop music on screen load
-  const [selectedChallenges, setSelectedChallenges] = useState([]); // 3 random challenges
+  const [todaysChallenges, setTodaysChallenges] = useState([]);
+  const [completedChallengeIds, setCompletedChallengeIds] = useState(new Set());
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   // stop music when screen is focused
   useFocusEffect(
@@ -33,11 +36,6 @@ const exercise = () => {
     }, [])
   );
 
-  // pick 3 random daily challenges on mount
-  useEffect(() => {
-    const shuffledChallenges = shuffle(challenges);
-    setSelectedChallenges(shuffledChallenges.slice(0, 3));
-  }, []);
 
   // calculate xp bar fill %
   const calculateFillPercentage = (xp) => {
@@ -51,18 +49,25 @@ const exercise = () => {
     return Math.floor(xp / maxXp) + 1;
   };
 
-  // get user name from appwrite
+  // get user name, leaderboard, and today's challenges from appwrite
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const Account = await getAccount();
         const userDocument = await getCurrentUser();
         setUser(Account.name);
+        setCurrentUserId(userDocument?.$id ?? null);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
+    const fetchLiveData = async () => {
+      const lb = await getLeaderboard();
+      setLeaderboard(lb);
+      setTodaysChallenges(getTodaysChallenges());
+    };
     fetchUserData();
+    fetchLiveData();
   }, []);
 
   // save xp to appwrite when xp changes
@@ -76,34 +81,20 @@ const exercise = () => {
     saveUserData();
   }, [xp]);
 
-  // pull to refresh -> gets new challenges
-  const onRefresh = () => {
-    setRefreshing(true);
-    const shuffledChallenges = shuffle(challenges);
-    setSelectedChallenges(shuffledChallenges.slice(0, 3));
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+  const handleCompleteChallenge = async (challenge) => {
+    if (completedChallengeIds.has(challenge.$id)) return;
+    setCompletedChallengeIds((prev) => new Set([...prev, challenge.$id]));
+    await addXp(challenge.xpReward);
   };
 
-  // all available challenges
-  const challenges = [
-    { id: '1', title: 'Complete any HIIT', reward: '🏆 50 XP ✅ ' },
-    { id: '2', title: 'Complete a Yoga Session', reward: '🎖️ 10 XP' },
-    { id: '3', title: 'Get a Perfect Score in Trivia', reward: '✨ 75 XP' },
-    { id: '4', title: 'Complete 3 Stretching Exercises', reward: '🌟 20 XP' },
-    { id: '5', title: 'Finish a 10-Minute Meditation', reward: '🧘 15 XP' },
-    { id: '6', title: 'Burn 100 Calories', reward: '🔥 30 XP' },
-    { id: '7', title: 'Drink 2 Liters of Water', reward: '💧 5 XP' },
-    { id: '8', title: 'Complete a Cardio Session', reward: '🏃 40 XP' },
-    { id: '9', title: 'Do 50 Push-Ups', reward: '💪 25 XP' },
-    { id: '10', title: 'Walk 5,000 Steps', reward: '🚶 10 XP' },
-    { id: '11', title: 'Complete a Dance Workout', reward: '💃 35 XP' },
-    { id: '12', title: 'Hold a Plank for 1 Minute', reward: '🛡️ 20 XP' },
-    { id: '13', title: 'Run 1 Kilometer', reward: '🏅 50 XP' },
-    { id: '14', title: 'Do 10 Burpees', reward: '🔥 15 XP' },
-    { id: '15', title: 'Stretch for 15 Minutes', reward: '🧘‍♂️ 10 XP' },
-  ];
+  // pull to refresh -> refreshes leaderboard (challenges are local, already set)
+  const onRefresh = async () => {
+    setRefreshing(true);
+    const lb = await getLeaderboard();
+    setLeaderboard(lb);
+    setRefreshing(false);
+  };
+
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -173,7 +164,7 @@ const exercise = () => {
                 </View>
 
                 {/* Party Games */}
-                <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                <View className="flex flex-col gap-3" style={{ width: 320 }}>
                       <View className="flex justify-center items-center flex-row w-full">
                         <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
                           <Image
@@ -208,7 +199,7 @@ const exercise = () => {
                       </TouchableOpacity>
                     </View>
                     {/* Trvia Games */}
-                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}>
                       <View className="flex justify-center items-center flex-row w-full">
                         <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
                           <Image
@@ -243,7 +234,7 @@ const exercise = () => {
                       </TouchableOpacity>
                     </View>
                     {/* HIIT Activity */}
-                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}>
                       <View className="flex justify-center items-center flex-row w-full">
                         <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
                           <Image
@@ -279,7 +270,7 @@ const exercise = () => {
                     </View>
 
                     {/* Yoga Stretches Activity */}
-                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}>
                       <View className="flex justify-center items-center flex-row w-full">
                         <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
                           <Image
@@ -314,7 +305,7 @@ const exercise = () => {
                       </TouchableOpacity>
                     </View>
                     {/*Stretches Activity */}
-                    <View className="flex flex-col gap-3" style={{ width: 320 }}> {/* Set fixed width */}
+                    <View className="flex flex-col gap-3" style={{ width: 320 }}>
                       <View className="flex justify-center items-center flex-row w-full">
                         <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
                           <Image
@@ -352,15 +343,77 @@ const exercise = () => {
               </View>
             </ScrollView>
 
-            {/* daily challenge cards */}
+            {/* daily challenges from appwrite */}
             <View className="w-full mt-10">
               <Text className="text-xl text-white font-bold mb-5">Daily Challenges</Text>
-              {selectedChallenges.map((challenge) => (
-                <View key={challenge.id} className="bg-gray-800 p-4 rounded-lg mb-4 relative">
-                  <Text className="text-lg font-bold text-white">{challenge.title}</Text>
-                  <Text className="text-sm text-gray-400">Reward: {challenge.reward}</Text>
-                </View>
-              ))}
+              {todaysChallenges.length === 0 ? (
+                <Text className="text-gray-400 text-sm">No challenges today. Check back tomorrow!</Text>
+              ) : (
+                todaysChallenges.map((challenge) => {
+                  const done = completedChallengeIds.has(challenge.$id);
+                  return (
+                    <View key={challenge.$id} className="bg-gray-800 p-4 rounded-lg mb-4" style={{ opacity: done ? 0.6 : 1 }}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                        <Text className="text-base font-bold text-white" style={{ flex: 1, marginRight: 8 }}>{challenge.title}</Text>
+                        <View style={{ backgroundColor: '#E55837', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 3 }}>
+                          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 12 }}>+{challenge.xpReward} XP</Text>
+                        </View>
+                      </View>
+                      <Text className="text-sm text-gray-400 mb-3">{challenge.description}</Text>
+                      {done ? (
+                        <Text style={{ color: '#4CAF50', fontWeight: 'bold' }}>✅ Completed</Text>
+                      ) : (
+                        <TouchableOpacity
+                          onPress={() => handleCompleteChallenge(challenge)}
+                          style={{ backgroundColor: '#E55837', borderRadius: 8, paddingVertical: 8, alignItems: 'center' }}
+                        >
+                          <Text style={{ color: '#fff', fontWeight: 'bold' }}>Complete</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  );
+                })
+              )}
+            </View>
+
+            {/* leaderboard */}
+            <View className="w-full mt-10 mb-10">
+              <Text className="text-xl text-white font-bold mb-5">🏆 Leaderboard</Text>
+              {leaderboard.length === 0 ? (
+                <Text className="text-gray-400 text-sm">No users yet.</Text>
+              ) : (
+                leaderboard.map((u, index) => {
+                  const medals = ['🥇', '🥈', '🥉'];
+                  const isMe = u.$id === currentUserId;
+                  return (
+                    <View
+                      key={u.$id}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: '#1E1E2D',
+                        borderRadius: 12,
+                        padding: 12,
+                        marginBottom: 10,
+                        borderWidth: isMe ? 1.5 : 0,
+                        borderColor: isMe ? '#E55837' : 'transparent',
+                      }}
+                    >
+                      <Text style={{ width: 36, fontSize: 18, color: '#fff', fontWeight: 'bold', textAlign: 'center' }}>
+                        {index < 3 ? medals[index] : `#${index + 1}`}
+                      </Text>
+                      <Image
+                        source={{ uri: u.avatar }}
+                        style={{ width: 38, height: 38, borderRadius: 19, marginHorizontal: 12, backgroundColor: '#333' }}
+                      />
+                      <Text style={{ flex: 1, fontSize: 15, color: '#fff', fontWeight: '500' }} numberOfLines={1}>
+                        {u.username}{isMe ? ' (you)' : ''}
+                      </Text>
+                      <Text style={{ fontSize: 13, color: '#E55837', fontWeight: 'bold' }}>{u.xp} XP</Text>
+                    </View>
+                  );
+                })
+              )}
             </View>
           </View>
         )}

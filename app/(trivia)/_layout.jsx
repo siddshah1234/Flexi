@@ -38,12 +38,6 @@ const triviaLayout = () => {
           }}
         />
         <Stack.Screen
-          name="partyGame"
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
             name="jepordy"
             options={{ headerShown: false }}
           />
