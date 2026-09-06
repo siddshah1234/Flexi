@@ -41,6 +41,8 @@ PODS:
   - AgoraRtcEngine_iOS/VideoCodecEnc (4.5.2)
   - AgoraRtcEngine_iOS/VirtualBackground (4.5.2)
   - AgoraRtcEngine_iOS/VQA (4.5.2)
+  - EXApplication (7.0.8):
+    - ExpoModulesCore
   - EXAV (16.0.8):
     - ExpoModulesCore
     - ReactCommon/turbomodule/core
@@ -253,6 +255,8 @@ PODS:
     - ExpoModulesCore
     - ZXingObjC/OneD
     - ZXingObjC/PDF417
+  - ExpoCrypto (15.0.9):
+    - ExpoModulesCore
   - ExpoFileSystem (19.0.21):
     - ExpoModulesCore
   - ExpoFont (14.0.11):
@@ -264,7 +268,7 @@ PODS:
     - RNScreens
   - ExpoKeepAwake (15.0.8):
     - ExpoModulesCore
-  - ExpoLinking (8.0.11):
+  - ExpoLinking (8.0.12):
     - ExpoModulesCore
   - ExpoModulesCore (3.0.29):
     - hermes-engine
@@ -2322,6 +2326,7 @@ PODS:
     - ZXingObjC/Core
 
 DEPENDENCIES:
+  - EXApplication (from `../node_modules/expo-auth-session/node_modules/expo-application/ios`)
   - EXAV (from `../node_modules/expo-av/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
@@ -2334,6 +2339,7 @@ DEPENDENCIES:
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
   - ExpoBlur (from `../node_modules/expo-blur/ios`)
   - ExpoCamera (from `../node_modules/expo-camera/ios`)
+  - ExpoCrypto (from `../node_modules/expo-auth-session/node_modules/expo-crypto/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
   - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
@@ -2435,6 +2441,8 @@ SPEC REPOS:
     - ZXingObjC
 
 EXTERNAL SOURCES:
+  EXApplication:
+    :path: "../node_modules/expo-auth-session/node_modules/expo-application/ios"
   EXAV:
     :path: "../node_modules/expo-av/ios"
   EXConstants:
@@ -2459,6 +2467,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-blur/ios"
   ExpoCamera:
     :path: "../node_modules/expo-camera/ios"
+  ExpoCrypto:
+    :path: "../node_modules/expo-auth-session/node_modules/expo-crypto/ios"
   ExpoFileSystem:
     :path: "../node_modules/expo-file-system/ios"
   ExpoFont:
@@ -2647,6 +2657,7 @@ SPEC CHECKSUMS:
   AgoraInfra_iOS: 3691b2b277a1712a35ae96de25af319de0d73d08
   AgoraIrisRTC_iOS: eab58c126439adf5ec99632828a558ea216860da
   AgoraRtcEngine_iOS: 97e2398a2addda9057815a2a583a658e36796ff6
+  EXApplication: 1e98d4b1dccdf30627f92917f4b2c5a53c330e5f
   EXAV: b60fcf142fae6684d295bc28cd7cfcb3335570ea
   EXConstants: fce59a631a06c4151602843667f7cfe35f81e271
   EXJSONUtils: 1d3e4590438c3ee593684186007028a14b3686cd
@@ -2659,12 +2670,13 @@ SPEC CHECKSUMS:
   ExpoAsset: f867e55ceb428aab99e1e8c082b5aee7c159ea18
   ExpoBlur: b90747a3f22a8b6ceffd9cb0dc41a4184efdc656
   ExpoCamera: 6a326deb45ba840749652e4c15198317aa78497e
+  ExpoCrypto: e2a2c4c748aac8485e5675f027b7901f511d43ff
   ExpoFileSystem: 858a44267a3e6e9057e0888ad7c7cfbf55d52063
   ExpoFont: f543ce20a228dd702813668b1a07b46f51878d47
   ExpoHaptics: d3a6375d8dcc3a1083d003bc2298ff654fafb536
   ExpoHead: 7e19b2272edf492262acf8afb391a295198a6b23
   ExpoKeepAwake: 55f75eca6499bb9e4231ebad6f3e9cb8f99c0296
-  ExpoLinking: 8f0aaf69aa56f832913030503b6263dc6f647f37
+  ExpoLinking: 2ef632ad5013e3f1568fae9408d56ab9af5efc55
   ExpoModulesCore: f3da4f1ab5a8375d0beafab763739dbee8446583
   ExpoSensors: 8f9fe9a9ffd36ca9c2f0fe40dafc0a063f844420
   ExpoSplashScreen: bc3cffefca2716e5f22350ca109badd7e50ec14d
