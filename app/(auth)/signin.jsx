@@ -1,82 +1,58 @@
-// this screen lets the user sign in with their email and password
-// it uses a form and sends the data to appwrite to log in
-// if the login works, it saves the user and sends them to the exercise screen
-// if not, it shows an error
-
-import { View, Text, ScrollView, Image, Alert } from 'react-native'
+import { View, Text, ScrollView, Image, Alert, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
 import FormField from '../../components/FormField'
 import CustomButton from '../../components/CustomButton'
 import { Link, router } from 'expo-router'
-import { getCurrentUser, signIn } from '../../lib/appwrite'
-import { useGlobalContext } from "../../context/globalprovider";
-import { getUserProfile } from '../../lib/appwrite';
-import { useFocusEffect } from '@react-navigation/native';
-
+import { getCurrentUser, signIn, signInWithGoogle } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/globalprovider'
+import { useXp } from '../(tabs)/XpContext'
 
 const SignIn = () => {
-  // get global functions to set user info
   const { setUser, setIsLogged } = useGlobalContext();
-
-  // track if the user is submitting the form
+  const { handleLogin } = useXp();
   const [isSubmitting, setSubmitting] = useState(false);
+  const [isGoogleSubmitting, setGoogleSubmitting] = useState(false);
+  const [form, setForm] = useState({ email: '', password: '' });
 
-  // set up the form state for email and password
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchProfile = async () => {
-        try {
-          const accountUser = await getCurrentUser();
-          const userProfile = await getUserProfile(accountUser.$id);
-          setUser(userProfile);
-          setIsLogged(true);
-        } catch {
-          setUser(null);
-          setIsLogged(false);
-        }
-      };
-      fetchProfile();
-    }, [])
-  );
-
-  // runs when the sign in button is pressed
   const submit = async () => {
-    // check if fields are empty
-    if (form.email === "" || form.password === "") {
-      Alert.alert("Error", "Please fill in all fields");
+    if (!form.email || !form.password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
     }
-
-    // start the loading spinner
     setSubmitting(true);
-
     try {
       await signIn(form.email, form.password);
-
-      // Wait for session to be ready (optional, but helps with Appwrite timing)
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      // Get the current user account
-      const accountUser = await getCurrentUser();
-
-      // Fetch the user's profile document (where XP and level are stored)
-      const userProfile = await getUserProfile(accountUser.$id);
-
-      // Save the user profile globally (this should include XP and level)
-      setUser(userProfile);
+      const user = await getCurrentUser();
+      setUser(user);
       setIsLogged(true);
-
-      router.replace("/exercise");
+      await handleLogin();
+      router.replace('/exercise');
     } catch (error) {
-      Alert.alert("Error", error.message);
+      const msg = error.message?.includes('paused')
+        ? 'Service is temporarily unavailable. Please try again later.'
+        : error.message;
+      Alert.alert('Error', msg);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const submitGoogle = async () => {
+    setGoogleSubmitting(true);
+    try {
+      const user = await signInWithGoogle();
+      setUser(user);
+      setIsLogged(true);
+      await handleLogin();
+      router.replace('/exercise');
+    } catch (error) {
+      if (!error.message?.includes('cancelled')) {
+        Alert.alert('Error', error.message);
+      }
+    } finally {
+      setGoogleSubmitting(false);
     }
   };
 
@@ -84,19 +60,16 @@ const SignIn = () => {
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View className="w-full justify-center min-h-[70vh] px-4 my-6">
-          {/* app logo */}
           <Image
             source={images.logo}
             className="w-[115px] h-[35px] -ml-5"
             resizeMode="contain"
           />
 
-          {/* screen title */}
           <Text className="text-2xl text-white text-semibold mt-10 font-psemibold">
             Log in to Flexi
           </Text>
 
-          {/* email input */}
           <FormField
             title="Email"
             value={form.email}
@@ -105,7 +78,6 @@ const SignIn = () => {
             keyboardType="email-address"
           />
 
-          {/* password input */}
           <FormField
             title="Password"
             value={form.password}
@@ -113,7 +85,6 @@ const SignIn = () => {
             otherStyles="mt-7"
           />
 
-          {/* sign in button */}
           <CustomButton
             title="Sign In"
             handlePress={submit}
@@ -121,12 +92,28 @@ const SignIn = () => {
             isLoading={isSubmitting}
           />
 
-          {/* link to sign up page */}
+          <View className="flex-row items-center my-5">
+            <View className="flex-1 h-px bg-gray-700" />
+            <Text className="text-gray-400 mx-3 font-pregular">or</Text>
+            <View className="flex-1 h-px bg-gray-700" />
+          </View>
+
+          <TouchableOpacity
+            onPress={submitGoogle}
+            disabled={isGoogleSubmitting}
+            className="flex-row items-center justify-center bg-white rounded-xl py-3 px-4"
+            style={{ opacity: isGoogleSubmitting ? 0.6 : 1 }}
+          >
+            <Text className="text-base font-psemibold text-gray-800">
+              {isGoogleSubmitting ? 'Signing in...' : 'Continue with Google'}
+            </Text>
+          </TouchableOpacity>
+
           <View className="justify-center pt-5 flex-row gap-2">
             <Text className="text-lg text-gray-100 font-pregular">
-              Don't have account?
+              Don't have an account?
             </Text>
-            <Link href={"/signup"} className="text-lg font-psemibold text-secondary">
+            <Link href="/signup" className="text-lg font-psemibold text-secondary">
               Sign Up
             </Link>
           </View>

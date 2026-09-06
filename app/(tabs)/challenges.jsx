@@ -1,13 +1,37 @@
-// Daily challenges screen — uses a local pool of 50 challenges.
-// Each day, 3 are deterministically selected using today's date as a seed,
-// so everyone sees the same 3 challenges and they rotate automatically every day.
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 import { useXp } from './XpContext';
 import { getTodaysChallenges } from '../../constants/challenges';
 
+const CHALLENGES_FILE = FileSystem.documentDirectory + 'daily_challenges.json';
 const CATEGORY_LABELS = { hiit: '💪 HIIT', yoga: '🧘 Yoga', stretches: '🤸 Stretches', trivia: '🧠 Trivia', party: '🎉 Party' };
+
+const todayDateStr = () => new Date().toISOString().split('T')[0];
+
+async function loadCompletedIds() {
+  try {
+    const info = await FileSystem.getInfoAsync(CHALLENGES_FILE);
+    if (!info.exists) return new Set();
+    const raw = await FileSystem.readAsStringAsync(CHALLENGES_FILE);
+    const data = JSON.parse(raw);
+    if (data.date !== todayDateStr()) return new Set(); // new day — reset
+    return new Set(data.completedIds);
+  } catch {
+    return new Set();
+  }
+}
+
+async function saveCompletedIds(ids) {
+  try {
+    await FileSystem.writeAsStringAsync(
+      CHALLENGES_FILE,
+      JSON.stringify({ date: todayDateStr(), completedIds: [...ids] })
+    );
+  } catch (e) {
+    console.error('Failed to save challenge progress', e);
+  }
+}
 
 // ─── Components ──────────────────────────────────────────────────────────────
 const ChallengeCard = ({ item, onComplete, completed }) => (
@@ -24,7 +48,7 @@ const ChallengeCard = ({ item, onComplete, completed }) => (
       <Text style={styles.completedLabel}>✅ Completed</Text>
     ) : (
       <TouchableOpacity style={styles.completeButton} onPress={() => onComplete(item)}>
-        <Text style={styles.completeButtonText}>Complete</Text>
+        <Text style={styles.completeButtonText}>Mark Complete</Text>
       </TouchableOpacity>
     )}
   </View>
@@ -36,9 +60,15 @@ const Challenges = () => {
   const [completedIds, setCompletedIds] = useState(new Set());
   const { addXp } = useXp();
 
+  useEffect(() => {
+    loadCompletedIds().then(setCompletedIds);
+  }, []);
+
   const handleComplete = async (challenge) => {
     if (completedIds.has(challenge.id)) return;
-    setCompletedIds((prev) => new Set([...prev, challenge.id]));
+    const updated = new Set([...completedIds, challenge.id]);
+    setCompletedIds(updated);
+    await saveCompletedIds(updated);
     await addXp(challenge.xpReward);
   };
 
@@ -50,6 +80,7 @@ const Challenges = () => {
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Daily Challenges</Text>
       <Text style={styles.subHeader}>{today}</Text>
+      <Text style={styles.note}>Complete each challenge to earn XP. Progress saves automatically.</Text>
       <FlatList
         data={challenges}
         keyExtractor={(item) => String(item.id)}
@@ -84,7 +115,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#CDCDE0',
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 6,
+  },
+  note: {
+    fontSize: 12,
+    color: '#888',
+    textAlign: 'center',
+    marginBottom: 20,
+    fontStyle: 'italic',
   },
   card: {
     backgroundColor: '#1E1E2D',

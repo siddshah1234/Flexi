@@ -52,11 +52,16 @@ export default function App() {
           <Text className="text-sm font-pregular text-gray-100 mt-7 text-center">
             Join Us and Transform Your Fitness Journey!
           </Text>
-          {/* Join Button */}
           <CustomButton
-            title="Join us Now"
+            title="Sign In"
             handlePress={() => router.push('/signin')}
             containerStyles="w-full mt-7"
+          />
+          <CustomButton
+            title="Create Account"
+            handlePress={() => router.push('/signup')}
+            containerStyles="w-full mt-3"
+            textStyles="text-secondary"
           />
         </View>
       </ScrollView>
