@@ -101,6 +101,7 @@ const exercise = () => {
       <FlatList
         data={[]} // empty flatlist, only using header
         keyExtractor={(item) => item.$id}
+        extraData={xp}
         renderItem={({ item }) => (
           <Text className="text-3xl text-white">{item.id}</Text>
         )}
