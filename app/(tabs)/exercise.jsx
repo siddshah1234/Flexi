@@ -98,43 +98,37 @@ const exercise = () => {
 
   return (
     <SafeAreaView className="bg-primary h-full">
+      {/* XP bar lives outside FlatList so it re-renders immediately when xp changes */}
+      <View className="px-4 pt-6 pb-2">
+        <View className="flex justify-between items-start flex-row mb-4">
+          <View>
+            <Text className="font-pmedium text-lg text-gray-100">Welcome back!</Text>
+            <Text className="top-4 text-4xl font-psemibold text-white">{user}</Text>
+          </View>
+          <View className="mt-8">
+            <Image source={images.logoSmall} className="w-9 h-10" resizeMode="contain" />
+          </View>
+        </View>
+        <Quote />
+        <View className="w-full pt-5 pb-2">
+          <Text className="text-gray-100 text-lg font-pregular mb-3">
+            Level: {calculateLevel(xp)}  ({xp}xp)
+          </Text>
+          <View className="w-full bg-gray-300 h-2 rounded-full">
+            <View
+              className="bg-secondary-200 h-2 rounded-full"
+              style={{ width: `${calculateFillPercentage(xp)}%` }}
+            />
+          </View>
+        </View>
+      </View>
+
       <FlatList
-        data={[]} // empty flatlist, only using header
+        data={[]}
         keyExtractor={(item) => item.$id}
-        extraData={xp}
-        renderItem={({ item }) => (
-          <Text className="text-3xl text-white">{item.id}</Text>
-        )}
+        renderItem={() => null}
         ListHeaderComponent={() => (
-          <View className="flex my-6 px-4 space-y-6">
-            {/* greeting and profile */}
-            <View className="flex justify-between items-start flex-row mb-6">
-              <View>
-                <Text className="font-pmedium text-lg text-gray-100">
-                  Welcome back!
-                </Text>
-                <Text className="top-4 text-4xl font-psemibold text-white">{user}</Text>
-              </View>
-              <View className="mt-8">
-                <Image source={images.logoSmall} className="w-9 h-10" resizeMode="contain" />
-              </View>
-            </View>
-
-            {/* motivational quote */}
-            <Quote />
-
-            {/* xp level and progress bar */}
-            <View className="w-full flex-1 pt-5 pb-8 top-5">
-              <Text className="text-gray-100 text-lg font-pregular mb-3">
-                Level: {calculateLevel(xp)}  ({xp}xp)
-              </Text>
-              <View className="w-full bg-gray-300 h-2 rounded-full">
-                <View
-                  className="bg-secondary-200 h-2 rounded-full"
-                  style={{ width: `${calculateFillPercentage(xp)}%` }}
-                />
-              </View>
-            </View>
+          <View className="flex px-4 space-y-6">
 
             {/* activity scroll list */}
             <Text className="text-xl text-white font-bold mb-5 mt-8">Activities</Text>
