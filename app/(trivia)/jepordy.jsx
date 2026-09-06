@@ -2,7 +2,7 @@
 // it includes categories, questions, and exercises for incorrect answers
 // players earn points and XP for correct answers
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     View,
     Text,
@@ -11,9 +11,10 @@ import {
     StyleSheet,
     Modal,
     Image,
-    Animated
+    Animated,
+    Alert,
 } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native';
 import { useXp } from '../(tabs)/XpContext';
 
 const exercises = [
@@ -114,6 +115,39 @@ const jepordy = () => {
     const xpBarWidth = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const { addXp, xp, calculateLevel } = useXp();
+    const navigation = useNavigation();
+
+    // Intercept back navigation when a game is in progress
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+            if (!gameStarted) return;
+            e.preventDefault();
+            Alert.alert(
+                'Quit Game?',
+                'Are you sure you want to quit? Current scores will be lost.',
+                [
+                    { text: 'Keep Playing', style: 'cancel' },
+                    { text: 'Quit', style: 'destructive', onPress: () => navigation.dispatch(e.data.action) },
+                ]
+            );
+        });
+        return unsubscribe;
+    }, [navigation, gameStarted]);
+
+    const handleBack = () => {
+        if (gameStarted) {
+            Alert.alert(
+                'Quit Game?',
+                'Are you sure you want to quit? Current scores will be lost.',
+                [
+                    { text: 'Keep Playing', style: 'cancel' },
+                    { text: 'Quit', style: 'destructive', onPress: () => navigation.goBack() },
+                ]
+            );
+        } else {
+            navigation.goBack();
+        }
+    };
 
     const startGame = (numTeams) => {
         const newTeams = Array.from({ length: numTeams }, (_, i) => ({
@@ -212,6 +246,9 @@ const jepordy = () => {
     if (!gameStarted) {
         return (
             <SafeAreaView style={styles.container}>
+                <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+                    <Text style={styles.backButtonText}>← Back</Text>
+                </TouchableOpacity>
                 <Text style={styles.header}>Exercise Jeopardy</Text>
                 <Text style={styles.subHeader}>Select the number of teams:</Text>
                 {[2, 3, 4].map((num) => (
@@ -229,6 +266,9 @@ const jepordy = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+                <Text style={styles.backButtonText}>← Quit</Text>
+            </TouchableOpacity>
             <Text style={styles.header}>Exercise Jeopardy</Text>
 
             {/* Current Turn */}
@@ -427,6 +467,17 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#161622',
         padding: 16,
+    },
+    backButton: {
+        alignSelf: 'flex-start',
+        marginBottom: 8,
+        paddingVertical: 4,
+        paddingHorizontal: 2,
+    },
+    backButtonText: {
+        color: '#E55837',
+        fontSize: 16,
+        fontWeight: '600',
     },
     header: {
         fontSize: 28,

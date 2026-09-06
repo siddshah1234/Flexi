@@ -70,16 +70,7 @@ const exercise = () => {
     fetchLiveData();
   }, []);
 
-  // save xp to appwrite when xp changes
-  useEffect(() => {
-    const saveUserData = async () => {
-      if (user) {
-        const userDocument = await getCurrentUser();
-        await updateUser(userDocument.$id, { xp });
-      }
-    };
-    saveUserData();
-  }, [xp]);
+  // XP saves are handled by XpContext.addXp — no duplicate write needed here
 
   const handleCompleteChallenge = async (challenge) => {
     if (completedChallengeIds.has(challenge.id)) return;
