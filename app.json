@@ -2,7 +2,7 @@
   "expo": {
     "name": "Flexi",
     "slug": "flexi",
-    "scheme": "Flexi",
+    "scheme": ["Flexi", "appwrite-callback-69d6b9b3000bed710e6f"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
