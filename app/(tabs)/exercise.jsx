@@ -82,8 +82,8 @@ const exercise = () => {
   }, [xp]);
 
   const handleCompleteChallenge = async (challenge) => {
-    if (completedChallengeIds.has(challenge.$id)) return;
-    setCompletedChallengeIds((prev) => new Set([...prev, challenge.$id]));
+    if (completedChallengeIds.has(challenge.id)) return;
+    setCompletedChallengeIds((prev) => new Set([...prev, challenge.id]));
     await addXp(challenge.xpReward);
   };
 
@@ -350,9 +350,9 @@ const exercise = () => {
                 <Text className="text-gray-400 text-sm">No challenges today. Check back tomorrow!</Text>
               ) : (
                 todaysChallenges.map((challenge) => {
-                  const done = completedChallengeIds.has(challenge.$id);
+                  const done = completedChallengeIds.has(challenge.id);
                   return (
-                    <View key={challenge.$id} className="bg-gray-800 p-4 rounded-lg mb-4" style={{ opacity: done ? 0.6 : 1 }}>
+                    <View key={challenge.id} className="bg-gray-800 p-4 rounded-lg mb-4" style={{ opacity: done ? 0.6 : 1 }}>
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                         <Text className="text-base font-bold text-white" style={{ flex: 1, marginRight: 8 }}>{challenge.title}</Text>
                         <View style={{ backgroundColor: '#E55837', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 3 }}>
