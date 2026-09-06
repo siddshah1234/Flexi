@@ -61,7 +61,6 @@ export default function App() {
             title="Create Account"
             handlePress={() => router.push('/signup')}
             containerStyles="w-full mt-3"
-            textStyles="text-secondary"
           />
         </View>
       </ScrollView>
